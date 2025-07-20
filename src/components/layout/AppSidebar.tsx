@@ -18,6 +18,7 @@ import {
   PenSquare,
   PlayCircle,
   RotateCw,
+  ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -49,7 +50,7 @@ const menuItems = [
   { href: "/scratch-cards", label: "Scratch Cards", icon: ScratchIcon },
   { href: "/watch-earn", label: "Watch &amp; Earn", icon: PlayCircle },
   { href: "/daily-bonus", label: "Daily Bonus", icon: Gift },
-  { href: "/write-earn", label: "Write &amp; Earn", icon: PenSquare },
+  { href: "/captcha", label: "Solve Captcha", icon: ShieldCheck },
   { href: "/refer-earn", label: "Refer &amp; Earn", icon: Users },
 ];
 

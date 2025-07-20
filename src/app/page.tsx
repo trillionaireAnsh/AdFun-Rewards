@@ -7,7 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { RotateCw, PlayCircle, Gift, PenSquare, Users } from "lucide-react";
+import { RotateCw, PlayCircle, Gift, Users, ShieldCheck } from "lucide-react";
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -57,10 +57,10 @@ const features = [
     icon: <Gift className="h-8 w-8 text-primary" />,
   },
   {
-    title: "Write & Earn",
-    description: "Write paragraphs for rewards.",
-    href: "/write-earn",
-    icon: <PenSquare className="h-8 w-8 text-primary" />,
+    title: "Solve Captcha",
+    description: "Solve captchas for rewards.",
+    href: "/captcha",
+    icon: <ShieldCheck className="h-8 w-8 text-primary" />,
   },
   {
     title: "Refer & Earn",
