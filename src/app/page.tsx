@@ -129,8 +129,10 @@ export default function Home() {
         </div>
 
         <div className="mt-6 flex justify-center">
-            <div className="w-full h-24 bg-muted flex items-center justify-center rounded-lg">
-                <p className="text-muted-foreground">Banner Ad Placeholder</p>
+            <div className="w-full text-center p-4 bg-muted flex flex-col items-center justify-center rounded-lg border-2 border-dashed">
+                <h4 className="text-lg font-semibold text-muted-foreground">AdMob Banner Ad</h4>
+                <p className="text-sm text-muted-foreground">This is where your ad would appear.</p>
+                <p className="text-xs text-muted-foreground mt-2 bg-slate-200 px-2 py-1 rounded">Ad Unit ID: {process.env.NEXT_PUBLIC_ADMOB_AD_UNIT_ID}</p>
             </div>
         </div>
       </div>
