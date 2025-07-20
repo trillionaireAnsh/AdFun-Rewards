@@ -43,34 +43,34 @@ export default function DailyBonusPage() {
     };
 
     return (
-        &lt;AppLayout title="Daily Bonus"&gt;
-            &lt;div className="flex justify-center"&gt;
-                &lt;Card className="w-full max-w-md text-center"&gt;
-                    &lt;CardHeader&gt;
-                        &lt;CardTitle&gt;Claim Your Daily Bonus&lt;/CardTitle&gt;
-                        &lt;CardDescription&gt;
+        <AppLayout title="Daily Bonus">
+            <div className="flex justify-center">
+                <Card className="w-full max-w-md text-center">
+                    <CardHeader>
+                        <CardTitle>Claim Your Daily Bonus</CardTitle>
+                        <CardDescription>
                             {isClaimed 
                                 ? "You have already claimed your bonus for today. See you tomorrow!" 
                                 : "Watch a short ad to claim your daily reward."
                             }
-                        &lt;/CardDescription&gt;
-                    &lt;/CardHeader&gt;
-                    &lt;CardContent className="flex flex-col items-center gap-6"&gt;
-                        &lt;div className="p-8 bg-primary/10 rounded-full"&gt;
-                           &lt;Gift className="w-24 h-24 text-primary" /&gt;
-                        &lt;/div&gt;
-                        &lt;Button
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex flex-col items-center gap-6">
+                        <div className="p-8 bg-primary/10 rounded-full">
+                           <Gift className="w-24 h-24 text-primary" />
+                        </div>
+                        <Button
                             size="lg"
                             className="w-full font-bold text-lg py-7"
                             onClick={handleClaimBonus}
                             disabled={isLoading || isClaimed}
-                        &gt;
-                            {isLoading && &lt;Loader2 className="mr-2 h-6 w-6 animate-spin" /&gt;}
+                        >
+                            {isLoading && <Loader2 className="mr-2 h-6 w-6 animate-spin" />}
                             {isClaimed ? 'Claimed for Today' : 'Claim 500 Coins'}
-                        &lt;/Button&gt;
-                    &lt;/CardContent&gt;
-                &lt;/Card&gt;
-            &lt;/div&gt;
-        &lt;/AppLayout&gt;
+                        </Button>
+                    </CardContent>
+                </Card>
+            </div>
+        </AppLayout>
     );
 }

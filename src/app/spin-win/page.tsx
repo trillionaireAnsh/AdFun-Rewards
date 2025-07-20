@@ -50,33 +50,33 @@ export default function SpinAndWinPage() {
     };
 
     return (
-        <AppLayout title="Spin &amp; Win">
+        <AppLayout title="Spin & Win">
             <div className="flex flex-col items-center gap-8">
                 <Card className="w-full max-w-md text-center">
                     <CardHeader>
                         <CardTitle>Spin the Wheel!</CardTitle>
-                        <CardDescription>You have &lt;span className="font-bold text-primary"&gt;{spinsLeft}&lt;/span&gt; spins left today. Tap below to win big!</CardDescription>
+                        <CardDescription>You have <span className="font-bold text-primary">{spinsLeft}</span> spins left today. Tap below to win big!</CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-col items-center gap-6">
-                        &lt;SpinWheel 
+                        <SpinWheel 
                             onSpinEnd={handleSpinEnd} 
                             rewardAmount={reward}
                             isSpinning={isSpinning}
                             setIsSpinning={setIsSpinning}
-                         /&gt;
+                         />
 
-                        &lt;Button 
+                        <Button 
                             size="lg" 
                             className="w-full font-bold text-lg py-7" 
                             onClick={handleSpinClick}
-                            disabled={isAdPlaying || isSpinning || spinsLeft &lt;= 0}
-                        &gt;
-                            {isAdPlaying ? &lt;Loader2 className="mr-2 h-6 w-6 animate-spin" /&gt; : null}
+                            disabled={isAdPlaying || isSpinning || spinsLeft <= 0}
+                        >
+                            {isAdPlaying ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : null}
                             {isAdPlaying ? 'Loading Ad...' : isSpinning ? 'Spinning...' : 'SPIN NOW'}
-                        &lt;/Button&gt;
-                    &lt;/CardContent&gt;
-                &lt;/Card&gt;
-            &lt;/div&gt;
-        &lt;/AppLayout&gt;
+                        </Button>
+                    </CardContent>
+                </Card>
+            </div>
+        </AppLayout>
     );
 }

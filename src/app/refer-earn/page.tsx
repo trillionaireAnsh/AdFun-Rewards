@@ -28,58 +28,58 @@ export default function ReferAndEarnPage() {
     }
 
     return (
-        &lt;AppLayout title="Refer &amp; Earn"&gt;
-            &lt;div className="grid gap-8 md:grid-cols-2"&gt;
-                &lt;Card&gt;
-                    &lt;CardHeader&gt;
-                        &lt;CardTitle&gt;Invite Your Friends&lt;/CardTitle&gt;
-                        &lt;CardDescription&gt;Share your referral code with friends. When they sign up, you both get a bonus of 1000 coins!&lt;/CardDescription&gt;
-                    &lt;/CardHeader&gt;
-                    &lt;CardContent className="space-y-4"&gt;
-                        &lt;p className="text-sm text-muted-foreground"&gt;Your unique referral code:&lt;/p&gt;
-                        &lt;div className="flex items-center space-x-2"&gt;
-                            &lt;Input value={referralCode} readOnly /&gt;
-                            &lt;Button variant="outline" size="icon" onClick={copyToClipboard}&gt;
-                                &lt;Copy className="h-4 w-4" /&gt;
-                            &lt;/Button&gt;
-                        &lt;/div&gt;
-                    &lt;/CardContent&gt;
-                    &lt;CardFooter&gt;
-                         &lt;Button className="w-full" size="lg"&gt;
+        <AppLayout title="Refer & Earn">
+            <div className="grid gap-8 md:grid-cols-2">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Invite Your Friends</CardTitle>
+                        <CardDescription>Share your referral code with friends. When they sign up, you both get a bonus of 1000 coins!</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-sm text-muted-foreground">Your unique referral code:</p>
+                        <div className="flex items-center space-x-2">
+                            <Input value={referralCode} readOnly />
+                            <Button variant="outline" size="icon" onClick={copyToClipboard}>
+                                <Copy className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    </CardContent>
+                    <CardFooter>
+                         <Button className="w-full" size="lg">
                             Share Now
-                        &lt;/Button&gt;
-                    &lt;/CardFooter&gt;
-                &lt;/Card&gt;
-                &lt;Card&gt;
-                    &lt;CardHeader&gt;
-                        &lt;CardTitle&gt;Have a Referral Code?&lt;/CardTitle&gt;
-                        &lt;CardDescription&gt;Enter a friend's referral code here to get your welcome bonus.&lt;/CardDescription&gt;
-                    &lt;/CardHeader&gt;
-                    &lt;CardContent className="space-y-4"&gt;
-                        &lt;p className="text-sm text-muted-foreground"&gt;Enter code:&lt;/p&gt;
-                        &lt;Input placeholder="e.g. FRIENDLY456" /&gt;
-                    &lt;/CardContent&gt;
-                     &lt;CardFooter&gt;
-                        &lt;Button className="w-full" size="lg" onClick={handleApplyCode}&gt;
+                        </Button>
+                    </CardFooter>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Have a Referral Code?</CardTitle>
+                        <CardDescription>Enter a friend's referral code here to get your welcome bonus.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-sm text-muted-foreground">Enter code:</p>
+                        <Input placeholder="e.g. FRIENDLY456" />
+                    </CardContent>
+                     <CardFooter>
+                        <Button className="w-full" size="lg" onClick={handleApplyCode}>
                             Apply Code
-                        &lt;/Button&gt;
-                    &lt;/CardFooter&gt;
-                &lt;/Card&gt;
-            &lt;/div&gt;
-            &lt;Card className="mt-8"&gt;
-                &lt;CardHeader&gt;
-                    &lt;CardTitle&gt;Your Referral Rewards&lt;/CardTitle&gt;
-                &lt;/CardHeader&gt;
-                &lt;CardContent&gt;
-                    &lt;div className="flex items-center justify-center text-center text-muted-foreground p-8 border-2 border-dashed rounded-lg"&gt;
-                        &lt;div &gt;
-                            &lt;Gift className="mx-auto h-12 w-12" /&gt;
-                            &lt;p className="mt-4"&gt;Your referral rewards will appear here.&lt;/p&gt;
-                            &lt;p className="text-sm"&gt;Start inviting friends to see your earnings grow!&lt;/p&gt;
-                        &lt;/div&gt;
-                    &lt;/div&gt;
-                &lt;/CardContent&gt;
-            &lt;/Card&gt;
-        &lt;/AppLayout&gt;
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </div>
+            <Card className="mt-8">
+                <CardHeader>
+                    <CardTitle>Your Referral Rewards</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex items-center justify-center text-center text-muted-foreground p-8 border-2 border-dashed rounded-lg">
+                        <div >
+                            <Gift className="mx-auto h-12 w-12" />
+                            <p className="mt-4">Your referral rewards will appear here.</p>
+                            <p className="text-sm">Start inviting friends to see your earnings grow!</p>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+        </AppLayout>
     );
 }

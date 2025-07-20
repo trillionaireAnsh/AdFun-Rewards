@@ -46,12 +46,12 @@ const ScratchIcon = () => (
 
 const menuItems = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/spin-win", label: "Spin &amp; Win", icon: RotateCw },
+  { href: "/spin-win", label: "Spin & Win", icon: RotateCw },
   { href: "/scratch-cards", label: "Scratch Cards", icon: ScratchIcon },
-  { href: "/watch-earn", label: "Watch &amp; Earn", icon: PlayCircle },
+  { href: "/watch-earn", label: "Watch & Earn", icon: PlayCircle },
   { href: "/daily-bonus", label: "Daily Bonus", icon: Gift },
   { href: "/captcha", label: "Solve Captcha", icon: ShieldCheck },
-  { href: "/refer-earn", label: "Refer &amp; Earn", icon: Users },
+  { href: "/refer-earn", label: "Refer & Earn", icon: Users },
 ];
 
 export function AppSidebar() {

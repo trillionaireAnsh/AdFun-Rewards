@@ -62,34 +62,34 @@ export default function ScratchCardPage() {
     };
 
     return (
-        &lt;AppLayout title="Scratch Cards"&gt;
-            &lt;Card&gt;
-                &lt;CardHeader&gt;
-                    &lt;CardTitle&gt;Daily Scratch Cards&lt;/CardTitle&gt;
-                    &lt;CardDescription&gt;You get 3 scratch cards every day. Click one to "watch an ad" and start scratching!&lt;/CardDescription&gt;
-                &lt;/CardHeader&gt;
-                &lt;CardContent className="grid gap-4 md:grid-cols-3"&gt;
+        <AppLayout title="Scratch Cards">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Daily Scratch Cards</CardTitle>
+                    <CardDescription>You get 3 scratch cards every day. Click one to "watch an ad" and start scratching!</CardDescription>
+                </CardHeader>
+                <CardContent className="grid gap-4 md:grid-cols-3">
                     {cards.map(card => (
-                        &lt;div key={card.id} onClick={() => handleCardClick(card.id)} className="relative"&gt;
-                            &lt;ScratchCard 
+                        <div key={card.id} onClick={() => handleCardClick(card.id)} className="relative">
+                            <ScratchCard 
                                 reward={card.reward} 
                                 onScratchComplete={() => handleScratchComplete(card.id)}
                                 isLocked={card.isScratched || card.isLocked}
-                            /&gt;
+                            />
                             {unlockingCardId === card.id && (
-                                &lt;div className="absolute inset-0 bg-black/60 flex items-center justify-center rounded-lg z-10"&gt;
-                                    &lt;Loader2 className="h-8 w-8 animate-spin text-white" /&gt;
-                                &lt;/div&gt;
+                                <div className="absolute inset-0 bg-black/60 flex items-center justify-center rounded-lg z-10">
+                                    <Loader2 className="h-8 w-8 animate-spin text-white" />
+                                </div>
                             )}
                             {card.isScratched && (
-                                &lt;div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded-lg"&gt;
-                                    &lt;p className="text-white font-bold text-lg bg-black/50 px-4 py-2 rounded-md"&gt;SCRATCHED&lt;/p&gt;
-                                &lt;/div&gt;
+                                <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded-lg">
+                                    <p className="text-white font-bold text-lg bg-black/50 px-4 py-2 rounded-md">SCRATCHED</p>
+                                </div>
                             )}
-                        &lt;/div&gt;
+                        </div>
                     ))}
-                &lt;/CardContent&gt;
-            &lt;/Card&gt;
-        &lt;/AppLayout&gt;
+                </CardContent>
+            </Card>
+        </AppLayout>
     );
 }
