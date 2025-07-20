@@ -8,7 +8,7 @@ import { useCoins } from '@/context/CoinContext';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Loader2, PlayCircle } from 'lucide-react';
 
-const ADS_PER_DAY = 25;
+const ADS_PER_DAY = 50;
 
 export default function WatchAndEarnPage() {
     const { toast } = useToast();

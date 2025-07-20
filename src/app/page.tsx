@@ -7,7 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { RotateCw, PlayCircle, Gift, Users, ShieldCheck } from "lucide-react";
+import { RotateCw, PlayCircle, Gift, Users, ShieldCheck, Wallet, Star } from "lucide-react";
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -50,6 +50,12 @@ const features = [
     href: "/watch-earn",
     icon: <PlayCircle className="h-8 w-8 text-primary" />,
   },
+   {
+    title: "Offer Wall",
+    description: "Complete offers for big rewards.",
+    href: "/offer-wall",
+    icon: <Star className="h-8 w-8 text-primary" />,
+  },
   {
     title: "Daily Bonus",
     description: "Claim your daily bonus.",
@@ -68,6 +74,12 @@ const features = [
     href: "/refer-earn",
     icon: <Users className="h-8 w-8 text-primary" />,
   },
+   {
+    title: "Withdraw",
+    description: "Cash out your earnings.",
+    href: "/withdraw",
+    icon: <Wallet className="h-8 w-8 text-primary" />,
+  },
 ];
 
 export default function Home() {
@@ -83,7 +95,7 @@ export default function Home() {
             </CardContent>
         </Card>
 
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {features.map((feature) => (
             <Link href={feature.href} key={feature.title} className="group">
               <Card className="h-full transition-all hover:border-primary hover:shadow-lg hover:-translate-y-1">

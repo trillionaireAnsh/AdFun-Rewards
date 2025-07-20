@@ -19,6 +19,8 @@ import {
   PlayCircle,
   RotateCw,
   ShieldCheck,
+  Star,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -49,9 +51,11 @@ const menuItems = [
   { href: "/spin-win", label: "Spin & Win", icon: RotateCw },
   { href: "/scratch-cards", label: "Scratch Cards", icon: ScratchIcon },
   { href: "/watch-earn", label: "Watch & Earn", icon: PlayCircle },
+  { href: "/offer-wall", label: "Offer Wall", icon: Star },
   { href: "/daily-bonus", label: "Daily Bonus", icon: Gift },
   { href: "/captcha", label: "Solve Captcha", icon: ShieldCheck },
   { href: "/refer-earn", label: "Refer & Earn", icon: Users },
+  { href: "/withdraw", label: "Withdraw", icon: Wallet },
 ];
 
 export function AppSidebar() {
