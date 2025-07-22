@@ -84,7 +84,7 @@ export default function CaptchaPage() {
       });
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      const reward = 100; // Fixed reward for captcha
+      const reward = 10; // Fixed reward for captcha
       addCoins(reward);
       toast({
         title: "Success!",

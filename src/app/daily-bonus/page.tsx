@@ -27,7 +27,7 @@ export default function DailyBonusPage() {
         // Simulate watching a rewarded ad
         await new Promise(resolve => setTimeout(resolve, 1500));
 
-        const reward = 500; // Fixed daily bonus
+        const reward = 50; // Fixed daily bonus
         addCoins(reward);
         
         const today = new Date().toISOString().split('T')[0];
@@ -66,7 +66,7 @@ export default function DailyBonusPage() {
                             disabled={isLoading || isClaimed}
                         >
                             {isLoading && <Loader2 className="mr-2 h-6 w-6 animate-spin" />}
-                            {isClaimed ? 'Claimed for Today' : 'Claim 500 Coins'}
+                            {isClaimed ? 'Claimed for Today' : 'Claim 50 Coins'}
                         </Button>
                     </CardContent>
                 </Card>

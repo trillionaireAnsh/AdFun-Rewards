@@ -10,6 +10,8 @@ import { Loader2 } from 'lucide-react';
 import { SpinWheel } from '@/components/SpinWheel';
 import { AdPlayer } from '@/components/AdPlayer';
 
+const segments = [25, 5, 30, 10, 15, 20, 8, 40];
+
 export default function SpinAndWinPage() {
     const { toast } = useToast();
     const { addCoins } = useCoins();
@@ -29,9 +31,8 @@ export default function SpinAndWinPage() {
     };
 
     const handleAdFinished = () => {
-        // The wheel has segments: [250, 50, 300, 100, 150, 200, 75, 400]
-        const calculatedReward = 250; 
-        setReward(calculatedReward);
+        const randomSegment = segments[Math.floor(Math.random() * segments.length)];
+        setReward(randomSegment);
         setIsSpinning(true);
     }
 
@@ -63,6 +64,7 @@ export default function SpinAndWinPage() {
                     </CardHeader>
                     <CardContent className="flex flex-col items-center gap-6">
                         <SpinWheel 
+                            segments={segments}
                             onSpinEnd={handleSpinEnd} 
                             rewardAmount={reward}
                             isSpinning={isSpinning}

@@ -33,7 +33,7 @@ export default function ReferAndEarnPage() {
                 <Card>
                     <CardHeader>
                         <CardTitle>Invite Your Friends</CardTitle>
-                        <CardDescription>Share your referral code with friends. When they sign up, you both get a bonus of 1000 coins!</CardDescription>
+                        <CardDescription>Share your referral code with friends. When they sign up, you both get a bonus of 100 coins!</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <p className="text-sm text-muted-foreground">Your unique referral code:</p>

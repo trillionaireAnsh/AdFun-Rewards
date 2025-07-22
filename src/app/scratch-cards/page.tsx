@@ -9,9 +9,9 @@ import { ScratchCard } from '@/components/ScratchCard';
 import { Loader2 } from 'lucide-react';
 
 const initialDailyCards = [
-    { id: 1, reward: 175, isLocked: true, isScratched: false },
-    { id: 2, reward: 210, isLocked: true, isScratched: false },
-    { id: 3, reward: 150, isLocked: true, isScratched: false },
+    { id: 1, reward: 15, isLocked: true, isScratched: false },
+    { id: 2, reward: 20, isLocked: true, isScratched: false },
+    { id: 3, reward: 10, isLocked: true, isScratched: false },
 ];
 
 export default function ScratchCardPage() {

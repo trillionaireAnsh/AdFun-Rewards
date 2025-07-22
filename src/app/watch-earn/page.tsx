@@ -21,7 +21,7 @@ export default function WatchAndEarnPage() {
         // Simulate watching ad
         await new Promise(resolve => setTimeout(resolve, 2000));
         
-        const reward = Math.floor(Math.random() * 100) + 200; // Random reward between 200-300
+        const reward = Math.floor(Math.random() * 10) + 15; // Random reward between 15-25
         addCoins(reward);
         setWatchedAds(prev => prev + 1);
 

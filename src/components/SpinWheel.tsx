@@ -3,10 +3,9 @@
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
-const segments = [250, 50, 300, 100, 150, 200, 75, 400];
 const segmentColors = ['#FFD700', '#FF6347', '#90EE90', '#87CEEB', '#DA70D6', '#20B2AA', '#FF8C00', '#6A5ACD'];
 
-export const SpinWheel = ({ onSpinEnd, rewardAmount, isSpinning, setIsSpinning }: { onSpinEnd: (coins: number) => void; rewardAmount: number, isSpinning: boolean, setIsSpinning: (spinning: boolean) => void; }) => {
+export const SpinWheel = ({ segments, onSpinEnd, rewardAmount, isSpinning, setIsSpinning }: { segments: number[]; onSpinEnd: (coins: number) => void; rewardAmount: number, isSpinning: boolean, setIsSpinning: (spinning: boolean) => void; }) => {
   const [rotation, setRotation] = useState(0);
 
   useEffect(() => {

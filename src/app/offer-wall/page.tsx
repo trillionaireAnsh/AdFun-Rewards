@@ -12,28 +12,28 @@ const offers = [
         id: 1,
         title: "Install & Play 'Epic Raiders'",
         description: "Reach level 10 to get your reward.",
-        reward: 5000,
+        reward: 500,
         icon: <Gamepad2 className="h-8 w-8 text-primary" />,
     },
     {
         id: 2,
         title: "Download 'ShopSmart' App",
         description: "Sign up and make your first purchase.",
-        reward: 7500,
+        reward: 750,
         icon: <Download className="h-8 w-8 text-primary" />,
     },
     {
         id: 3,
         title: "Complete a Survey",
         description: "Share your opinion on consumer products.",
-        reward: 2000,
+        reward: 200,
         icon: <HandCoins className="h-8 w-8 text-primary" />,
     },
     {
         id: 4,
         title: "Play 'Puzzle Mania'",
         description: "Complete 25 puzzles to earn coins.",
-        reward: 4000,
+        reward: 400,
         icon: <Gamepad2 className="h-8 w-8 text-primary" />,
     }
 ];

@@ -15,11 +15,11 @@ import { useCoins } from "@/context/CoinContext";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, DollarSign, History } from "lucide-react";
 
-// 1 USD = 10000 coins
-const CONVERSION_RATE = 10000;
+// 1000 coins = 10 INR
+const CONVERSION_RATE = 100; // 1 INR = 100 coins
 
 const formSchema = z.object({
-  amount: z.coerce.number().min(1, "Please enter a valid amount."),
+  amount: z.coerce.number().min(10, "Minimum withdrawal is ₹10."),
   method: z.string().min(1, "Please select a payment method."),
   details: z.string().min(5, "Please enter your payment details."),
 });
@@ -27,7 +27,7 @@ const formSchema = z.object({
 type WithdrawalRequest = {
   id: string;
   amountCoins: number;
-  amountUSD: number;
+  amountINR: number;
   method: string;
   date: string;
   status: "Pending" | "Completed" | "Failed";
@@ -76,7 +76,7 @@ export default function WithdrawPage() {
     const newRequest: WithdrawalRequest = {
       id: new Date().getTime().toString(),
       amountCoins: amountInCoins,
-      amountUSD: values.amount,
+      amountINR: values.amount,
       method: values.method,
       date: new Date().toLocaleDateString(),
       status: "Pending",
@@ -90,7 +90,7 @@ export default function WithdrawPage() {
 
     toast({
       title: "Withdrawal Request Submitted",
-      description: `Your request for $${values.amount} is being processed.`,
+      description: `Your request for ₹${values.amount} is being processed.`,
     });
 
     form.reset();
@@ -104,7 +104,7 @@ export default function WithdrawPage() {
           <CardHeader>
             <CardTitle>Request a Withdrawal</CardTitle>
             <CardDescription>
-              10,000 coins = $1.00 USD. Minimum withdrawal is $1.
+              1,000 coins = ₹10 INR. Minimum withdrawal is ₹10.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -115,9 +115,9 @@ export default function WithdrawPage() {
                   name="amount"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Amount to Withdraw (USD)</FormLabel>
+                      <FormLabel>Amount to Withdraw (INR)</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="e.g. 5" {...field} />
+                        <Input type="number" placeholder="e.g. 50" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -136,8 +136,8 @@ export default function WithdrawPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="paypal">PayPal</SelectItem>
                           <SelectItem value="paytm">Paytm</SelectItem>
+                          <SelectItem value="upi">UPI</SelectItem>
                           <SelectItem value="bank">Bank Transfer</SelectItem>
                         </SelectContent>
                       </Select>
@@ -150,7 +150,7 @@ export default function WithdrawPage() {
                   name="details"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Payment Details (Email, Phone, etc.)</FormLabel>
+                      <FormLabel>Payment Details (UPI ID, Phone, etc.)</FormLabel>
                       <FormControl>
                         <Input placeholder="Enter your payment info" {...field} />
                       </FormControl>
@@ -188,7 +188,7 @@ export default function WithdrawPage() {
                         <TableBody>
                             {history.map((req) => (
                                 <TableRow key={req.id}>
-                                    <TableCell className="font-medium">${req.amountUSD.toFixed(2)}</TableCell>
+                                    <TableCell className="font-medium">₹{req.amountINR.toFixed(2)}</TableCell>
                                     <TableCell>{req.method}</TableCell>
                                     <TableCell>{req.date}</TableCell>
                                     <TableCell>{req.status}</TableCell>
