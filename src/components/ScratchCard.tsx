@@ -8,31 +8,36 @@ interface ScratchCardProps {
   reward: number;
   onScratchComplete: () => void;
   isLocked: boolean;
+  isScratched: boolean;
 }
 
-export function ScratchCard({ reward, onScratchComplete, isLocked }: ScratchCardProps) {
+export function ScratchCard({ reward, onScratchComplete, isLocked, isScratched }: ScratchCardProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isRevealed, setIsRevealed] = useState(false);
 
   useEffect(() => {
-    if (isLocked || isRevealed) return;
+    if (isLocked || isRevealed || isScratched) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-    
-    ctx.fillStyle = '#cccccc';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.font = 'bold 24px Poppins';
-    ctx.fillStyle = '#888888';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('SCRATCH HERE', canvas.width / 2, canvas.height / 2);
+    // Set a timeout to ensure the canvas has dimensions before drawing
+    setTimeout(() => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+      
+      ctx.fillStyle = '#cccccc';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      ctx.font = 'bold 24px Poppins';
+      ctx.fillStyle = '#888888';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('SCRATCH HERE', canvas.width / 2, canvas.height / 2);
+    }, 0);
+
 
     let isDrawing = false;
 
@@ -87,7 +92,7 @@ export function ScratchCard({ reward, onScratchComplete, isLocked }: ScratchCard
         canvas.removeEventListener('touchend', stopDrawing);
         canvas.removeEventListener('touchmove', scratch);
     };
-  }, [isLocked, isRevealed, onScratchComplete]);
+  }, [isLocked, isRevealed, onScratchComplete, isScratched]);
 
   return (
     <div className="relative w-full h-40 rounded-lg overflow-hidden shadow-md bg-gradient-to-br from-yellow-300 to-orange-400">
@@ -98,7 +103,7 @@ export function ScratchCard({ reward, onScratchComplete, isLocked }: ScratchCard
         <p className="text-sm">coins</p>
       </div>
       
-      {!isRevealed && (
+      {!isRevealed && !isScratched && (
         <>
           {!isLocked ? (
             <canvas
@@ -106,7 +111,7 @@ export function ScratchCard({ reward, onScratchComplete, isLocked }: ScratchCard
               className={cn('absolute inset-0 w-full h-full cursor-grab')}
             />
           ) : (
-             <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white cursor-pointer">
+             <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white cursor-pointer z-10">
                 <Lock size={32} />
                 <p className="mt-2 font-semibold">Click to unlock</p>
             </div>

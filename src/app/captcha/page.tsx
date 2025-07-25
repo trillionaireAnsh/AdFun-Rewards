@@ -26,7 +26,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useCoins } from "@/context/CoinContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Loader2, RefreshCw } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { AdPlayer } from "@/components/AdPlayer";
 
 const formSchema = z.object({
   captcha: z.string().min(1, "Please enter the captcha."),
@@ -46,6 +46,7 @@ export default function CaptchaPage() {
   const { addCoins } = useCoins();
   const [isLoading, setIsLoading] = useState(false);
   const [captchaText, setCaptchaText] = useState("");
+  const [isAdPlayerOpen, setIsAdPlayerOpen] = useState(false);
 
   useEffect(() => {
     setCaptchaText(generateCaptcha());
@@ -63,6 +64,17 @@ export default function CaptchaPage() {
     form.reset();
   }
 
+  const handleAdFinished = () => {
+    const reward = 10;
+    addCoins(reward);
+    toast({
+      title: "Success!",
+      description: `You've earned ${reward} coins.`,
+    });
+    handleRefresh();
+    setIsLoading(false);
+  }
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
 
@@ -77,34 +89,20 @@ export default function CaptchaPage() {
       return;
     }
     
-    try {
-      toast({
-          title: "Watching Ad...",
-          description: "Please wait while we load a short ad.",
-      });
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const reward = 10; // Fixed reward for captcha
-      addCoins(reward);
-      toast({
-        title: "Success!",
-        description: `You've earned ${reward} coins.`,
-      });
-      handleRefresh();
-
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "An error occurred",
-        description: "Something went wrong. Please try again later.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    setIsAdPlayerOpen(true);
   }
 
   return (
     <AppLayout title="Solve Captcha">
+      <AdPlayer 
+        open={isAdPlayerOpen}
+        onClose={() => {
+            setIsAdPlayerOpen(false);
+            setIsLoading(false);
+        }}
+        onAdFinished={handleAdFinished}
+        title="Watch Ad to Earn"
+      />
       <Card className="max-w-md mx-auto">
         <CardHeader>
           <CardTitle>Solve the Captcha</CardTitle>

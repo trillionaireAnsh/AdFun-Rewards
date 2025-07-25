@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useCoins } from '@/context/CoinContext';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ScratchCard } from '@/components/ScratchCard';
-import { Loader2 } from 'lucide-react';
+import { AdPlayer } from '@/components/AdPlayer';
 
 const initialDailyCards = [
     { id: 1, reward: 15, isLocked: true, isScratched: false },
@@ -18,7 +18,8 @@ export default function ScratchCardPage() {
     const { toast } = useToast();
     const { addCoins } = useCoins();
     const [cards, setCards] = useState(initialDailyCards);
-    const [unlockingCardId, setUnlockingCardId] = useState<number | null>(null);
+    const [isAdPlayerOpen, setIsAdPlayerOpen] = useState(false);
+    const [cardToUnlockId, setCardToUnlockId] = useState<number | null>(null);
 
     // Load state from local storage on mount
     useEffect(() => {
@@ -39,15 +40,18 @@ export default function ScratchCardPage() {
 
     const handleCardClick = (cardId: number) => {
         const card = cards.find(c => c.id === cardId);
-        if (!card || !card.isLocked || card.isScratched || unlockingCardId) return;
+        if (!card || !card.isLocked || card.isScratched || isAdPlayerOpen) return;
 
-        setUnlockingCardId(cardId);
-        // Simulate ad
-        setTimeout(() => {
-            setCards(prevCards => prevCards.map(c => c.id === cardId ? { ...c, isLocked: false } : c));
-            setUnlockingCardId(null);
-        }, 1500);
+        setCardToUnlockId(cardId);
+        setIsAdPlayerOpen(true);
     };
+
+    const handleAdFinished = () => {
+        if (cardToUnlockId) {
+            setCards(prevCards => prevCards.map(c => c.id === cardToUnlockId ? { ...c, isLocked: false } : c));
+        }
+        setCardToUnlockId(null);
+    }
 
     const handleScratchComplete = (cardId: number) => {
         const card = cards.find(c => c.id === cardId);
@@ -63,10 +67,19 @@ export default function ScratchCardPage() {
 
     return (
         <AppLayout title="Scratch Cards">
+            <AdPlayer 
+                open={isAdPlayerOpen}
+                onClose={() => {
+                    setIsAdPlayerOpen(false);
+                    setCardToUnlockId(null);
+                }}
+                onAdFinished={handleAdFinished}
+                title="Watch Ad to Unlock Card"
+            />
             <Card>
                 <CardHeader>
                     <CardTitle>Daily Scratch Cards</CardTitle>
-                    <CardDescription>You get 3 scratch cards every day. Click one to "watch an ad" and start scratching!</CardDescription>
+                    <CardDescription>You get 3 scratch cards every day. Click a locked card to "watch an ad" and unlock it!</CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-4 md:grid-cols-3">
                     {cards.map(card => (
@@ -74,15 +87,11 @@ export default function ScratchCardPage() {
                             <ScratchCard 
                                 reward={card.reward} 
                                 onScratchComplete={() => handleScratchComplete(card.id)}
-                                isLocked={card.isScratched || card.isLocked}
+                                isLocked={card.isLocked}
+                                isScratched={card.isScratched}
                             />
-                            {unlockingCardId === card.id && (
-                                <div className="absolute inset-0 bg-black/60 flex items-center justify-center rounded-lg z-10">
-                                    <Loader2 className="h-8 w-8 animate-spin text-white" />
-                                </div>
-                            )}
                             {card.isScratched && (
-                                <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded-lg">
+                                <div className="absolute inset-0 bg-black/30 flex items-center justify-center rounded-lg z-10">
                                     <p className="text-white font-bold text-lg bg-black/50 px-4 py-2 rounded-md">SCRATCHED</p>
                                 </div>
                             )}

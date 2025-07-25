@@ -7,12 +7,14 @@ import { useToast } from '@/hooks/use-toast';
 import { useCoins } from '@/context/CoinContext';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Gift, Loader2 } from 'lucide-react';
+import { AdPlayer } from '@/components/AdPlayer';
 
 export default function DailyBonusPage() {
     const { toast } = useToast();
     const { addCoins } = useCoins();
     const [isLoading, setIsLoading] = useState(false);
     const [isClaimed, setIsClaimed] = useState(false);
+    const [isAdPlayerOpen, setIsAdPlayerOpen] = useState(false);
 
     useEffect(() => {
         const today = new Date().toISOString().split('T')[0];
@@ -22,28 +24,39 @@ export default function DailyBonusPage() {
         }
     }, []);
 
-    const handleClaimBonus = async () => {
+    const handleClaimClick = () => {
         setIsLoading(true);
-        // Simulate watching a rewarded ad
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        setIsAdPlayerOpen(true);
+    };
 
-        const reward = 50; // Fixed daily bonus
+    const handleAdFinished = () => {
+        const reward = 50;
         addCoins(reward);
         
         const today = new Date().toISOString().split('T')[0];
         localStorage.setItem('dailyBonusClaimed', today);
         
         setIsClaimed(true);
-        setIsLoading(false);
         
         toast({
             title: "Daily Bonus Claimed!",
             description: `You've received ${reward} coins. Come back tomorrow for more!`,
         });
+
+        setIsLoading(false);
     };
 
     return (
         <AppLayout title="Daily Bonus">
+            <AdPlayer
+                open={isAdPlayerOpen}
+                onClose={() => {
+                    setIsAdPlayerOpen(false)
+                    setIsLoading(false);
+                }}
+                onAdFinished={handleAdFinished}
+                title="Watch ad for Daily Bonus"
+            />
             <div className="flex justify-center">
                 <Card className="w-full max-w-md text-center">
                     <CardHeader>
@@ -62,7 +75,7 @@ export default function DailyBonusPage() {
                         <Button
                             size="lg"
                             className="w-full font-bold text-lg py-7"
-                            onClick={handleClaimBonus}
+                            onClick={handleClaimClick}
                             disabled={isLoading || isClaimed}
                         >
                             {isLoading && <Loader2 className="mr-2 h-6 w-6 animate-spin" />}
