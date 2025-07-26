@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/context/AuthContext";
 
 const CoinIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-yellow-500">
@@ -23,6 +24,7 @@ const CoinIcon = () => (
 
 export function AppLayout({ children, title }: { children: ReactNode; title: string }) {
   const { coins } = useCoins();
+  const { logout } = useAuth();
 
   return (
     <SidebarInset className="bg-background">
@@ -51,7 +53,7 @@ export function AppLayout({ children, title }: { children: ReactNode; title: str
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Terms &amp; Conditions</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

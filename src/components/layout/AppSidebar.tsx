@@ -25,6 +25,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 
 const ScratchIcon = () => (
   <svg
@@ -60,6 +61,7 @@ const menuItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { logout } = useAuth();
 
   return (
     <Sidebar className="border-r" collapsible="icon">
@@ -85,7 +87,7 @@ export function AppSidebar() {
             <Button variant="ghost" className="w-full justify-start gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2">
                 <Settings /> <span className="group-data-[collapsible=icon]:hidden">Settings</span>
             </Button>
-            <Button variant="ghost" className="w-full justify-start gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2">
+            <Button variant="ghost" className="w-full justify-start gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2" onClick={logout}>
                 <LogOut /> <span className="group-data-[collapsible=icon]:hidden">Logout</span>
             </Button>
         </SidebarFooter>
