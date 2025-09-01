@@ -68,13 +68,13 @@ export default function WithdrawPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      amount: undefined,
+      amount: '' as any,
       method: "",
       details: "",
     },
   });
 
-  const amountInCoins = form.watch("amount") * CONVERSION_RATE || 0;
+  const amountInCoins = Number(form.watch("amount")) * CONVERSION_RATE || 0;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!user) return;
@@ -142,7 +142,7 @@ export default function WithdrawPage() {
                     <FormItem>
                       <FormLabel>Amount to Withdraw (INR)</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="e.g. 50" {...field} onChange={(e) => field.onChange(e.target.valueAsNumber)} />
+                        <Input type="number" placeholder="e.g. 50" {...field} onChange={(e) => field.onChange(e.target.value === '' ? '' : e.target.valueAsNumber)} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
