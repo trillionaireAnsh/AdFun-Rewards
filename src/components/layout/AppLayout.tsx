@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
+import { Skeleton } from "../ui/skeleton";
 
 const CoinIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-yellow-500">
@@ -23,8 +24,8 @@ const CoinIcon = () => (
   );
 
 export function AppLayout({ children, title }: { children: ReactNode; title: string }) {
-  const { coins } = useCoins();
-  const { logout } = useAuth();
+  const { coins, isLoading: isCoinsLoading } = useCoins();
+  const { user, logout } = useAuth();
 
   return (
     <SidebarInset className="bg-background">
@@ -36,19 +37,23 @@ export function AppLayout({ children, title }: { children: ReactNode; title: str
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 rounded-full bg-secondary px-3 py-1.5 shadow-inner">
             <CoinIcon />
-            <span className="font-semibold">{coins.toLocaleString()}</span>
+            {isCoinsLoading ? (
+              <Skeleton className="h-5 w-12" />
+            ) : (
+              <span className="font-semibold">{coins.toLocaleString()}</span>
+            )}
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full">
                 <Avatar className="h-9 w-9">
-                  <AvatarImage src="https://placehold.co/40x40.png" alt="User" data-ai-hint="avatar user"/>
-                  <AvatarFallback>U</AvatarFallback>
+                  <AvatarImage src={user?.photoURL || "https://placehold.co/40x40.png"} alt={user?.displayName || "User"} data-ai-hint="avatar user"/>
+                  <AvatarFallback>{user?.email?.[0].toUpperCase() || 'U'}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>{user?.email || "My Account"}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Terms &amp; Conditions</DropdownMenuItem>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -14,6 +15,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useCoins } from "@/context/CoinContext";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, DollarSign, History } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, query, where, orderBy, onSnapshot, Timestamp } from "firebase/firestore";
 
 // 1000 coins = 10 INR
 const CONVERSION_RATE = 100; // 1 INR = 100 coins
@@ -25,26 +29,41 @@ const formSchema = z.object({
 });
 
 type WithdrawalRequest = {
-  id: string;
+  id?: string;
+  userId: string;
   amountCoins: number;
   amountINR: number;
   method: string;
-  date: string;
+  details: string;
+  date: Timestamp;
   status: "Pending" | "Completed" | "Failed";
 };
 
 export default function WithdrawPage() {
-  const { coins, setCoins } = useCoins();
+  const { user } = useAuth();
+  const { coins, addCoins } = useCoins();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState<WithdrawalRequest[]>([]);
 
   useEffect(() => {
-    const storedHistory = localStorage.getItem("withdrawalHistory");
-    if (storedHistory) {
-      setHistory(JSON.parse(storedHistory));
-    }
-  }, []);
+    if (!user) return;
+    const q = query(
+      collection(db, "withdrawals"), 
+      where("userId", "==", user.uid), 
+      orderBy("date", "desc")
+    );
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const requests: WithdrawalRequest[] = [];
+      querySnapshot.forEach((doc) => {
+        requests.push({ id: doc.id, ...doc.data() } as WithdrawalRequest);
+      });
+      setHistory(requests);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,6 +77,7 @@ export default function WithdrawPage() {
   const amountInCoins = form.watch("amount") * CONVERSION_RATE || 0;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!user) return;
     setIsLoading(true);
 
     if (amountInCoins > coins) {
@@ -70,31 +90,36 @@ export default function WithdrawPage() {
       return;
     }
 
-    // Simulate backend processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      const newRequest: WithdrawalRequest = {
+        userId: user.uid,
+        amountCoins: amountInCoins,
+        amountINR: values.amount,
+        method: values.method,
+        details: values.details,
+        date: Timestamp.now(),
+        status: "Pending",
+      };
 
-    const newRequest: WithdrawalRequest = {
-      id: new Date().getTime().toString(),
-      amountCoins: amountInCoins,
-      amountINR: values.amount,
-      method: values.method,
-      date: new Date().toLocaleDateString(),
-      status: "Pending",
-    };
+      await addDoc(collection(db, "withdrawals"), newRequest);
+      await addCoins(-amountInCoins);
 
-    const updatedHistory = [newRequest, ...history];
-    setHistory(updatedHistory);
-    localStorage.setItem("withdrawalHistory", JSON.stringify(updatedHistory));
-    
-    setCoins(prev => prev - amountInCoins);
+      toast({
+        title: "Withdrawal Request Submitted",
+        description: `Your request for ₹${values.amount} is being processed.`,
+      });
 
-    toast({
-      title: "Withdrawal Request Submitted",
-      description: `Your request for ₹${values.amount} is being processed.`,
-    });
-
-    form.reset();
-    setIsLoading(false);
+      form.reset();
+    } catch (error) {
+      console.error("Error submitting withdrawal request:", error);
+      toast({
+        variant: "destructive",
+        title: "Submission Failed",
+        description: "There was an error submitting your request. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -117,7 +142,7 @@ export default function WithdrawPage() {
                     <FormItem>
                       <FormLabel>Amount to Withdraw (INR)</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="e.g. 50" {...field} />
+                        <Input type="number" placeholder="e.g. 50" {...field} onChange={(e) => field.onChange(e.target.valueAsNumber)} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -190,7 +215,7 @@ export default function WithdrawPage() {
                                 <TableRow key={req.id}>
                                     <TableCell className="font-medium">₹{req.amountINR.toFixed(2)}</TableCell>
                                     <TableCell>{req.method}</TableCell>
-                                    <TableCell>{req.date}</TableCell>
+                                    <TableCell>{req.date.toDate().toLocaleDateString()}</TableCell>
                                     <TableCell>{req.status}</TableCell>
                                 </TableRow>
                             ))}

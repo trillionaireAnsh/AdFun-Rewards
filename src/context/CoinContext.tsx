@@ -1,24 +1,61 @@
+
 "use client";
 
-import { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
+import { useAuth } from './AuthContext';
+import { doc, getDoc, setDoc, increment } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 type CoinContextType = {
   coins: number;
-  setCoins: Dispatch<SetStateAction<number>>;
-  addCoins: (amount: number) => void;
+  addCoins: (amount: number) => Promise<void>;
+  isLoading: boolean;
 };
 
 const CoinContext = createContext<CoinContextType | undefined>(undefined);
 
 export function CoinProvider({ children }: { children: ReactNode }) {
-  const [coins, setCoins] = useState(1250); // Start with some coins for demo
+  const { user } = useAuth();
+  const [coins, setCoins] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const addCoins = (amount: number) => {
+  const fetchCoins = useCallback(async () => {
+    if (!user) return;
+    setIsLoading(true);
+    const userDocRef = doc(db, 'users', user.uid);
+    const userDoc = await getDoc(userDocRef);
+
+    if (userDoc.exists()) {
+      setCoins(userDoc.data().coins || 0);
+    } else {
+      // If user doc doesn't exist, create it with initial coin balance
+      await setDoc(userDocRef, { coins: 1250, email: user.email });
+      setCoins(1250);
+    }
+    setIsLoading(false);
+  }, [user]);
+
+  useEffect(() => {
+    fetchCoins();
+  }, [fetchCoins]);
+
+  const addCoins = async (amount: number) => {
+    if (!user) return;
+    const userDocRef = doc(db, 'users', user.uid);
+    await setDoc(userDocRef, { coins: increment(amount) }, { merge: true });
     setCoins(prevCoins => prevCoins + amount);
   };
+  
+  const setCoinsCallback = useCallback(async (newCoins: number) => {
+    if(!user) return;
+    const userDocRef = doc(db, 'users', user.uid);
+    await setDoc(userDocRef, { coins: newCoins }, { merge: true });
+    setCoins(newCoins);
+  }, [user]);
+
 
   return (
-    <CoinContext.Provider value={{ coins, setCoins, addCoins }}>
+    <CoinContext.Provider value={{ coins, addCoins, isLoading }}>
       {children}
     </CoinContext.Provider>
   );
