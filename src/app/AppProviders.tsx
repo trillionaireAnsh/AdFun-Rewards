@@ -15,36 +15,41 @@ function AppContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated && pathname !== '/login') {
+    if (isLoading) return; // Wait until authentication status is resolved
+
+    const isAuthPage = pathname === '/login';
+
+    if (!isAuthenticated && !isAuthPage) {
       router.push('/login');
-    }
-    if (!isLoading && isAuthenticated && pathname === '/login') {
+    } else if (isAuthenticated && isAuthPage) {
       router.push('/');
     }
   }, [isAuthenticated, isLoading, router, pathname]);
 
-  if (isLoading) {
+  if (isLoading || (!isAuthenticated && pathname !== '/login')) {
     return <SplashScreen />;
   }
-  
-  if (!isAuthenticated && pathname !== '/login') {
-    return <SplashScreen />; 
-  }
 
-  if (pathname === '/login') {
-    return <>{children}</>;
+  // If authenticated, show the main app layout
+  if (isAuthenticated) {
+    // Don't show the login page content if the user is authenticated
+    if (pathname === '/login') {
+       return <SplashScreen />;
+    }
+    return (
+      <CoinProvider>
+        <SidebarProvider>
+          <div className="flex min-h-screen">
+            <AppSidebar />
+            {children}
+          </div>
+        </SidebarProvider>
+      </CoinProvider>
+    );
   }
   
-  return (
-    <CoinProvider>
-      <SidebarProvider>
-        <div className="flex min-h-screen">
-          <AppSidebar />
-          {children}
-        </div>
-      </SidebarProvider>
-    </CoinProvider>
-  );
+  // If not authenticated, only show the login page
+  return <>{children}</>;
 }
 
 export function AppProviders({
