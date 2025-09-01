@@ -43,10 +43,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await signOut(auth);
   };
 
-  if (isLoading) {
-    return <SplashScreen />;
-  }
-
   return (
     <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, logout }}>
       {children}
