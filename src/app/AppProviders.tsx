@@ -30,12 +30,13 @@ function AppContent({ children }: { children: React.ReactNode }) {
     return <SplashScreen />;
   }
 
-  // If authenticated, show the main app layout
+  // If authenticated and on the login page, show splash while redirecting
+  if (isAuthenticated && pathname === '/login') {
+    return <SplashScreen />;
+  }
+  
+  // If authenticated and not on login page, show the app
   if (isAuthenticated) {
-    // Don't show the login page content if the user is authenticated
-    if (pathname === '/login') {
-       return <SplashScreen />;
-    }
     return (
       <CoinProvider>
         <SidebarProvider>
@@ -48,7 +49,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
     );
   }
   
-  // If not authenticated, only show the login page
+  // If not authenticated, and on the login page, show the login page
   return <>{children}</>;
 }
 
