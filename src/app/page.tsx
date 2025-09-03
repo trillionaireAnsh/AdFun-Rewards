@@ -117,7 +117,7 @@ export default function Home() {
                     <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                         <Card>
                             <CardContent className="flex aspect-video items-center justify-center p-0 overflow-hidden rounded-lg">
-                                <Image src={`https://placehold.co/600x400.png`} alt={`Offer ${index + 1}`} width={600} height={400} data-ai-hint="promotion offer"/>
+                                <Image src={`https://picsum.photos/600/400?random=${index}`} alt={`Offer ${index + 1}`} width={600} height={400} data-ai-hint="promotion offer"/>
                             </CardContent>
                         </Card>
                     </CarouselItem>
