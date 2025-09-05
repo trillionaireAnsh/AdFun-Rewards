@@ -8,14 +8,12 @@ import { useToast } from '@/hooks/use-toast';
 import { useCoins } from '@/context/CoinContext';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Gift, Loader2 } from 'lucide-react';
-import { AdPlayer } from '@/components/AdPlayer';
 
 export default function DailyBonusPage() {
     const { toast } = useToast();
     const { addCoins } = useCoins();
     const [isLoading, setIsLoading] = useState(false);
     const [isClaimed, setIsClaimed] = useState(false);
-    const [isAdPlayerOpen, setIsAdPlayerOpen] = useState(false);
 
     useEffect(() => {
         const today = new Date().toISOString().split('T')[0];
@@ -27,10 +25,11 @@ export default function DailyBonusPage() {
 
     const handleClaimClick = () => {
         setIsLoading(true);
-        setIsAdPlayerOpen(true);
+        // Simulate a short delay for feedback
+        setTimeout(handleReward, 500);
     };
 
-    const handleAdFinished = () => {
+    const handleReward = () => {
         const reward = 20;
         addCoins(reward);
         
@@ -49,15 +48,6 @@ export default function DailyBonusPage() {
 
     return (
         <AppLayout title="Daily Bonus">
-            <AdPlayer
-                open={isAdPlayerOpen}
-                onClose={() => {
-                    setIsAdPlayerOpen(false)
-                    setIsLoading(false);
-                }}
-                onAdFinished={handleAdFinished}
-                title="Watch ad for Daily Bonus"
-            />
             <div className="flex justify-center">
                 <Card className="w-full max-w-md text-center">
                     <CardHeader>
@@ -65,7 +55,7 @@ export default function DailyBonusPage() {
                         <CardDescription>
                             {isClaimed 
                                 ? "You have already claimed your bonus for today. See you tomorrow!" 
-                                : "Watch a short ad to claim your daily reward."
+                                : "Click the button below to claim your daily reward."
                             }
                         </CardDescription>
                     </CardHeader>

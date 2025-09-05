@@ -15,7 +15,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -26,7 +25,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useCoins } from "@/context/CoinContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Loader2, RefreshCw } from "lucide-react";
-import { AdPlayer } from "@/components/AdPlayer";
 
 const formSchema = z.object({
   captcha: z.string().min(1, "Please enter the captcha."),
@@ -46,7 +44,6 @@ export default function CaptchaPage() {
   const { addCoins } = useCoins();
   const [isLoading, setIsLoading] = useState(false);
   const [captchaText, setCaptchaText] = useState("");
-  const [isAdPlayerOpen, setIsAdPlayerOpen] = useState(false);
 
   useEffect(() => {
     setCaptchaText(generateCaptcha());
@@ -64,7 +61,7 @@ export default function CaptchaPage() {
     form.reset();
   }
 
-  const handleAdFinished = () => {
+  const handleSuccess = () => {
     const reward = Math.floor(Math.random() * 11) + 10; // Random reward between 10-20
     addCoins(reward);
     toast({
@@ -89,25 +86,17 @@ export default function CaptchaPage() {
       return;
     }
     
-    setIsAdPlayerOpen(true);
+    // Simulate a short delay for feedback
+    setTimeout(handleSuccess, 500);
   }
 
   return (
     <AppLayout title="Solve Captcha">
-      <AdPlayer 
-        open={isAdPlayerOpen}
-        onClose={() => {
-            setIsAdPlayerOpen(false);
-            setIsLoading(false);
-        }}
-        onAdFinished={handleAdFinished}
-        title="Watch Ad to Earn"
-      />
       <Card className="max-w-md mx-auto">
         <CardHeader>
           <CardTitle>Solve the Captcha</CardTitle>
           <CardDescription>
-            Enter the text from the image below to earn coins after watching a short ad.
+            Enter the text from the image below to earn coins.
           </CardDescription>
         </CardHeader>
         <CardContent>

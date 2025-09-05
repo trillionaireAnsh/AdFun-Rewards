@@ -7,7 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { RotateCw, PlayCircle, Gift, Users, ShieldCheck, Wallet, Star } from "lucide-react";
+import { RotateCw, Gift, Users, ShieldCheck, Wallet, Star } from "lucide-react";
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -45,12 +45,6 @@ const features = [
     icon: <ScratchIcon />,
   },
   {
-    title: "Watch & Earn",
-    description: "Watch videos to earn coins.",
-    href: "/watch-earn",
-    icon: <PlayCircle className="h-8 w-8 text-primary" />,
-  },
-   {
     title: "Offer Wall",
     description: "Complete offers for big rewards.",
     href: "/offer-wall",
@@ -126,14 +120,6 @@ export default function Home() {
                 <CarouselPrevious />
                 <CarouselNext />
             </Carousel>
-        </div>
-
-        <div className="mt-6 flex justify-center">
-            <div className="w-full text-center p-4 bg-muted flex flex-col items-center justify-center rounded-lg border-2 border-dashed">
-                <h4 className="text-lg font-semibold text-muted-foreground">AdMob Banner Ad</h4>
-                <p className="text-sm text-muted-foreground">This is where your ad would appear.</p>
-                <p className="text-xs text-muted-foreground mt-2 bg-slate-200 px-2 py-1 rounded">Ad Unit ID: {process.env.NEXT_PUBLIC_ADMOB_AD_UNIT_ID || 'Not Set'}</p>
-            </div>
         </div>
       </div>
     </AppLayout>

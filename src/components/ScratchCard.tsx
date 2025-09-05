@@ -2,21 +2,20 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Gift, Lock } from 'lucide-react';
+import { Gift } from 'lucide-react';
 
 interface ScratchCardProps {
   reward: number;
   onScratchComplete: () => void;
-  isLocked: boolean;
   isScratched: boolean;
 }
 
-export function ScratchCard({ reward, onScratchComplete, isLocked, isScratched }: ScratchCardProps) {
+export function ScratchCard({ reward, onScratchComplete, isScratched }: ScratchCardProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isRevealed, setIsRevealed] = useState(false);
 
   useEffect(() => {
-    if (isLocked || isRevealed || isScratched) return;
+    if (isRevealed || isScratched) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -42,7 +41,7 @@ export function ScratchCard({ reward, onScratchComplete, isLocked, isScratched }
     let isDrawing = false;
 
     const getScratchPercentage = () => {
-      if (!ctx) return 0;
+      if (!ctx || !canvas.width || !canvas.height) return 0;
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const pixels = imageData.data;
       let transparentPixels = 0;
@@ -56,6 +55,7 @@ export function ScratchCard({ reward, onScratchComplete, isLocked, isScratched }
 
     const scratch = (e: MouseEvent | TouchEvent) => {
       if (!isDrawing || !ctx) return;
+      e.preventDefault();
       
       const rect = canvas.getBoundingClientRect();
       const x = 'touches' in e ? e.touches[0].clientX - rect.left : e.clientX - rect.left;
@@ -67,8 +67,12 @@ export function ScratchCard({ reward, onScratchComplete, isLocked, isScratched }
       ctx.fill();
     };
 
-    const startDrawing = () => { isDrawing = true; };
-    const stopDrawing = () => {
+    const startDrawing = (e: MouseEvent | TouchEvent) => { 
+        e.preventDefault();
+        isDrawing = true; 
+    };
+    const stopDrawing = (e: MouseEvent | TouchEvent) => {
+        e.preventDefault();
         isDrawing = false;
         if (getScratchPercentage() > 50) {
             ctx?.clearRect(0, 0, canvas.width, canvas.height);
@@ -80,19 +84,21 @@ export function ScratchCard({ reward, onScratchComplete, isLocked, isScratched }
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mouseup', stopDrawing);
     canvas.addEventListener('mousemove', scratch);
-    canvas.addEventListener('touchstart', startDrawing, { passive: true });
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
     canvas.addEventListener('touchend', stopDrawing);
-    canvas.addEventListener('touchmove', scratch, { passive: true });
+    canvas.addEventListener('touchmove', scratch, { passive: false });
 
     return () => {
-        canvas.removeEventListener('mousedown', startDrawing);
-        canvas.removeEventListener('mouseup', stopDrawing);
-        canvas.removeEventListener('mousemove', scratch);
-        canvas.removeEventListener('touchstart', startDrawing);
-        canvas.removeEventListener('touchend', stopDrawing);
-        canvas.removeEventListener('touchmove', scratch);
+        if(canvas){
+            canvas.removeEventListener('mousedown', startDrawing);
+            canvas.removeEventListener('mouseup', stopDrawing);
+            canvas.removeEventListener('mousemove', scratch);
+            canvas.removeEventListener('touchstart', startDrawing);
+            canvas.removeEventListener('touchend', stopDrawing);
+            canvas.removeEventListener('touchmove', scratch);
+        }
     };
-  }, [isLocked, isRevealed, onScratchComplete, isScratched]);
+  }, [isRevealed, onScratchComplete, isScratched]);
 
   return (
     <div className="relative w-full h-40 rounded-lg overflow-hidden shadow-md bg-gradient-to-br from-yellow-300 to-orange-400">
@@ -104,19 +110,10 @@ export function ScratchCard({ reward, onScratchComplete, isLocked, isScratched }
       </div>
       
       {!isRevealed && !isScratched && (
-        <>
-          {!isLocked ? (
-            <canvas
-              ref={canvasRef}
-              className={cn('absolute inset-0 w-full h-full cursor-grab')}
-            />
-          ) : (
-             <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white cursor-pointer z-10">
-                <Lock size={32} />
-                <p className="mt-2 font-semibold">Click to unlock</p>
-            </div>
-          )}
-        </>
+        <canvas
+          ref={canvasRef}
+          className={cn('absolute inset-0 w-full h-full cursor-grab z-10')}
+        />
       )}
     </div>
   );
