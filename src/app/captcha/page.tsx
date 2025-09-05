@@ -65,7 +65,7 @@ export default function CaptchaPage() {
   }
 
   const handleAdFinished = () => {
-    const reward = 10;
+    const reward = Math.floor(Math.random() * 11) + 10; // Random reward between 10-20
     addCoins(reward);
     toast({
       title: "Success!",

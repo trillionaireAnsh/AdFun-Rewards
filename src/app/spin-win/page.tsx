@@ -10,7 +10,7 @@ import { Loader2 } from 'lucide-react';
 import { SpinWheel } from '@/components/SpinWheel';
 import { AdPlayer } from '@/components/AdPlayer';
 
-const segments = [25, 5, 30, 10, 15, 20, 8, 40];
+const segments = [10, 12, 14, 15, 16, 18, 20, 10];
 
 export default function SpinAndWinPage() {
     const { toast } = useToast();
