@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -30,7 +31,7 @@ export default function DailyBonusPage() {
     };
 
     const handleAdFinished = () => {
-        const reward = 50;
+        const reward = 20;
         addCoins(reward);
         
         const today = new Date().toISOString().split('T')[0];
@@ -79,7 +80,7 @@ export default function DailyBonusPage() {
                             disabled={isLoading || isClaimed}
                         >
                             {isLoading && <Loader2 className="mr-2 h-6 w-6 animate-spin" />}
-                            {isClaimed ? 'Claimed for Today' : 'Claim 50 Coins'}
+                            {isClaimed ? 'Claimed for Today' : 'Claim 20 Coins'}
                         </Button>
                     </CardContent>
                 </Card>
