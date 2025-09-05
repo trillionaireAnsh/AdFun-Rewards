@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -8,7 +9,7 @@ import { useCoins } from '@/context/CoinContext';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SpinWheel } from '@/components/SpinWheel';
 
-const segments = [10, 12, 14, 15, 16, 18, 20, 10];
+const segments = [5, 8, 6, 9, 7, 5, 8, 6];
 
 export default function SpinAndWinPage() {
     const { toast } = useToast();

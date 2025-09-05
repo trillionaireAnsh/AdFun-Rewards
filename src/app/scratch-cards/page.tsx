@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -8,9 +9,9 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { ScratchCard } from '@/components/ScratchCard';
 
 const initialDailyCards = [
-    { id: 1, reward: 15, isScratched: false },
-    { id: 2, reward: 20, isScratched: false },
-    { id: 3, reward: 10, isScratched: false },
+    { id: 1, reward: 5, isScratched: false },
+    { id: 2, reward: 8, isScratched: false },
+    { id: 3, reward: 6, isScratched: false },
 ];
 
 export default function ScratchCardPage() {

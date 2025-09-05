@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -62,7 +63,7 @@ export default function CaptchaPage() {
   }
 
   const handleSuccess = () => {
-    const reward = Math.floor(Math.random() * 11) + 10; // Random reward between 10-20
+    const reward = Math.floor(Math.random() * 5) + 5; // Random reward between 5-9
     addCoins(reward);
     toast({
       title: "Success!",

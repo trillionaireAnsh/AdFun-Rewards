@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -47,9 +48,9 @@ const ScratchIcon = () => (
 
 const menuItems = [
   { href: "/", label: "Home", icon: Home },
+  { href: "/offer-wall", label: "Offer Wall", icon: Star },
   { href: "/spin-win", label: "Spin & Win", icon: RotateCw },
   { href: "/scratch-cards", label: "Scratch Cards", icon: ScratchIcon },
-  { href: "/offer-wall", label: "Offer Wall", icon: Star },
   { href: "/daily-bonus", label: "Daily Bonus", icon: Gift },
   { href: "/captcha", label: "Solve Captcha", icon: ShieldCheck },
   { href: "/refer-earn", label: "Refer & Earn", icon: Users },

@@ -1,3 +1,4 @@
+
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -33,6 +34,12 @@ const ScratchIcon = () => (
 
 const features = [
   {
+    title: "Offer Wall",
+    description: "Complete offers for big rewards.",
+    href: "/offer-wall",
+    icon: <Star className="h-8 w-8 text-primary" />,
+  },
+  {
     title: "Spin & Win",
     description: "Try your luck on the wheel.",
     href: "/spin-win",
@@ -43,12 +50,6 @@ const features = [
     description: "Reveal hidden rewards.",
     href: "/scratch-cards",
     icon: <ScratchIcon />,
-  },
-  {
-    title: "Offer Wall",
-    description: "Complete offers for big rewards.",
-    href: "/offer-wall",
-    icon: <Star className="h-8 w-8 text-primary" />,
   },
   {
     title: "Daily Bonus",
