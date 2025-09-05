@@ -1,23 +1,38 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Copy, Gift, TrendingUp, Users, Award } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ReferAndEarnPage() {
     const { toast } = useToast();
-    const [referralCode, setReferralCode] = useState('ADFUN123XYZ');
+    const { user } = useAuth();
+    const [referralCode, setReferralCode] = useState('');
+    const [referralLink, setReferralLink] = useState('');
+
+    useEffect(() => {
+        if (user) {
+            const code = user.uid.substring(0, 8).toUpperCase();
+            setReferralCode(code);
+            // This assumes your app will be hosted at this domain.
+            // In a real scenario, this would come from an environment variable.
+            setReferralLink(`https://adfun-rewards-dl24p.web.app/login?ref=${code}`);
+        }
+    }, [user]);
 
     const copyToClipboard = () => {
-        navigator.clipboard.writeText(referralCode);
+        if (!referralLink) return;
+        navigator.clipboard.writeText(referralLink);
         toast({
             title: "Copied!",
-            description: "Your referral code has been copied to the clipboard.",
+            description: "Your referral link has been copied to the clipboard.",
         });
     };
 
@@ -35,19 +50,23 @@ export default function ReferAndEarnPage() {
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2"><Users /> Invite Your Friends</CardTitle>
-                        <CardDescription>Share your code to earn rewards from your friends' activity.</CardDescription>
+                        <CardDescription>Share your unique link to earn rewards from your friends' activity.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <p className="text-sm text-muted-foreground">Your unique referral code:</p>
+                        <p className="text-sm text-muted-foreground">Your unique referral link:</p>
                         <div className="flex items-center space-x-2">
-                            <Input value={referralCode} readOnly />
-                            <Button variant="outline" size="icon" onClick={copyToClipboard}>
+                             {user ? (
+                                <Input value={referralLink} readOnly />
+                             ) : (
+                                <Skeleton className="h-10 w-full" />
+                             )}
+                            <Button variant="outline" size="icon" onClick={copyToClipboard} disabled={!user}>
                                 <Copy className="h-4 w-4" />
                             </Button>
                         </div>
                     </CardContent>
                     <CardFooter>
-                         <Button className="w-full" size="lg">
+                         <Button className="w-full" size="lg" disabled={!user}>
                             Share Now
                         </Button>
                     </CardFooter>
