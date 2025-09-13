@@ -9,7 +9,7 @@ import { Download, Gamepad2, HandCoins } from "lucide-react";
 
 // 1000 coins = ₹10 INR, so 100 coins = ₹1 INR
 const COINS_PER_RUPEE = 100;
-const USER_REWARD_PERCENTAGE = 0.15; // 15%
+const USER_REWARD_PERCENTAGE = 0.40; // 40%
 
 const offers = [
     {
@@ -68,7 +68,7 @@ export default function OfferWallPage() {
                     <CardHeader>
                         <CardTitle>Complete Offers, Earn Big!</CardTitle>
                         <CardDescription>
-                            Complete offers from our partners to earn coins. Your reward is 15% of the offer's value. 
+                            Complete offers from our partners to earn coins. Your reward is 40% of the offer's value. 
                             This is a simulation; clicking 'Start Offer' will instantly grant the reward.
                         </CardDescription>
                     </CardHeader>
