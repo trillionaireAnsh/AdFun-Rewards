@@ -1,9 +1,11 @@
+
 "use client";
 
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import Image from 'next/image';
+import Link from "next/link";
 
 const offerwalls = [
     {
@@ -47,12 +49,6 @@ const offerwalls = [
 
 export default function OfferWallPage() {
 
-    const handleViewOffers = (offerwallName: string) => {
-        // In a real application, this would trigger the specific provider's SDK
-        // to show the offerwall, often in an iframe or webview.
-        alert(`Showing offers from ${offerwallName}. Integration required.`);
-    }
-
     return (
         <AppLayout title="Offer Walls">
             <div className="space-y-6">
@@ -67,21 +63,23 @@ export default function OfferWallPage() {
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {offerwalls.map((wall) => (
                         <Card key={wall.id} className="flex flex-col">
-                            <CardHeader>
-                               <div className="flex justify-center mb-4">
-                                     <Image src={wall.logo} alt={`${wall.name} logo`} width={120} height={50} className="rounded-md" data-ai-hint="logo company"/>
-                               </div>
-                                <CardTitle className="text-center">{wall.name}</CardTitle>
-                                <CardDescription className="text-center min-h-[40px]">{wall.description}</CardDescription>
-                            </CardHeader>
-                            <CardContent className="flex-grow">
-                                {/* Content can be added here if needed */}
-                            </CardContent>
-                            <CardFooter>
-                                <Button className="w-full" onClick={() => handleViewOffers(wall.name)}>
-                                    View Offers
-                                </Button>
-                            </CardFooter>
+                             <Link href={`/offer-wall/${wall.id}`} className="flex flex-col flex-grow">
+                                <CardHeader>
+                                <div className="flex justify-center mb-4">
+                                        <Image src={wall.logo} alt={`${wall.name} logo`} width={120} height={50} className="rounded-md" data-ai-hint="logo company"/>
+                                </div>
+                                    <CardTitle className="text-center">{wall.name}</CardTitle>
+                                    <CardDescription className="text-center min-h-[40px]">{wall.description}</CardDescription>
+                                </CardHeader>
+                                <CardContent className="flex-grow">
+                                    {/* Content can be added here if needed */}
+                                </CardContent>
+                                <CardFooter>
+                                    <Button className="w-full">
+                                        View Offers
+                                    </Button>
+                                </CardFooter>
+                            </Link>
                         </Card>
                     ))}
                 </div>
