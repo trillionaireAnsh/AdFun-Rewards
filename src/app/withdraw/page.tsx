@@ -23,7 +23,7 @@ import { collection, addDoc, query, where, orderBy, onSnapshot, Timestamp } from
 const CONVERSION_RATE = 100; // 1 INR = 100 coins
 
 const formSchema = z.object({
-  amount: z.coerce.number().min(10, "Minimum withdrawal is ₹10."),
+  amount: z.coerce.number().min(50, "Minimum withdrawal is ₹50."),
   method: z.string().min(1, "Please select a payment method."),
   details: z.string().min(5, "Please enter your payment details."),
 });
@@ -129,7 +129,7 @@ export default function WithdrawPage() {
           <CardHeader>
             <CardTitle>Request a Withdrawal</CardTitle>
             <CardDescription>
-              1,000 coins = ₹10 INR. Minimum withdrawal is ₹10.
+              1,000 coins = ₹10 INR. Minimum withdrawal is ₹50.
             </CardDescription>
           </CardHeader>
           <CardContent>
