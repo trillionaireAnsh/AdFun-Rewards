@@ -3,101 +3,87 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { useCoins } from "@/context/CoinContext";
-import { useToast } from "@/hooks/use-toast";
-import { Download, Gamepad2, HandCoins } from "lucide-react";
+import Image from 'next/image';
 
-// 1000 coins = ₹10 INR, so 100 coins = ₹1 INR
-const COINS_PER_RUPEE = 100;
-const USER_REWARD_PERCENTAGE = 0.40; // 40%
-
-const offers = [
+const offerwalls = [
     {
-        id: 1,
-        title: "Install & Play 'Epic Raiders'",
-        description: "Reach level 10 to get your reward.",
-        offerValue: 40, // in INR
-        icon: <Gamepad2 className="h-8 w-8 text-primary" />,
+        id: 'adgatemedia',
+        name: 'AdGate Media',
+        description: 'Complete tasks, watch videos, and try new apps.',
+        logo: 'https://placehold.co/100x40/000000/FFFFFF?text=AdGate'
     },
     {
-        id: 2,
-        title: "Download 'ShopSmart' App",
-        description: "Sign up and make your first purchase.",
-        offerValue: 50, // in INR
-        icon: <Download className="h-8 w-8 text-primary" />,
+        id: 'offertoro',
+        name: 'OfferToro',
+        description: 'A wide variety of mobile and desktop offers.',
+        logo: 'https://placehold.co/100x40/1A84C8/FFFFFF?text=OfferToro'
     },
     {
-        id: 3,
-        title: "Complete a Survey",
-        description: "Share your opinion on consumer products.",
-        offerValue: 100, // in INR
-        icon: <HandCoins className="h-8 w-8 text-primary" />,
+        id: 'ayetstudios',
+        name: 'Ayet-Studios',
+        description: 'Discover new games and apps to earn rewards.',
+        logo: 'https://placehold.co/100x40/FF5722/FFFFFF?text=Ayet'
     },
     {
-        id: 4,
-        title: "Play 'Puzzle Mania'",
-        description: "Complete 25 puzzles to earn coins.",
-        offerValue: 30, // in INR
-        icon: <Gamepad2 className="h-8 w-8 text-primary" />,
+        id: 'adgem',
+        name: 'AdGem',
+        description: 'Engage with top brands and earn.',
+        logo: 'https://placehold.co/100x40/00C482/FFFFFF?text=AdGem'
+    },
+    {
+        id: 'cpxresearch',
+        name: 'CPX Research',
+        description: 'Share your opinion and earn with paid surveys.',
+        logo: 'https://placehold.co/100x40/FBC02D/000000?text=CPX'
+    },
+    {
+        id: 'wannads',
+        name: 'Wannads',
+        description: 'Play games, take surveys and get rewarded.',
+        logo: 'https://placehold.co/100x40/8E44AD/FFFFFF?text=Wannads'
     }
 ];
 
-const calculateReward = (offerValue: number) => {
-    const userRewardINR = offerValue * USER_REWARD_PERCENTAGE;
-    const coinReward = Math.floor(userRewardINR * COINS_PER_RUPEE);
-    return coinReward;
-}
-
 
 export default function OfferWallPage() {
-    const { addCoins } = useCoins();
-    const { toast } = useToast();
 
-    const handleOfferComplete = (reward: number) => {
-        addCoins(reward);
-        toast({
-            title: "Offer Completed!",
-            description: `You have been rewarded with ${reward} coins.`,
-        });
-    };
+    const handleViewOffers = (offerwallName: string) => {
+        // In a real application, this would trigger the specific provider's SDK
+        // to show the offerwall, often in an iframe or webview.
+        alert(`Showing offers from ${offerwallName}. Integration required.`);
+    }
 
     return (
-        <AppLayout title="Offer Wall">
+        <AppLayout title="Offer Walls">
             <div className="space-y-6">
                  <Card className="bg-muted/50">
                     <CardHeader>
-                        <CardTitle>Complete Offers, Earn Big!</CardTitle>
+                        <CardTitle>Choose an Offer Wall</CardTitle>
                         <CardDescription>
-                            Complete offers from our partners to earn coins. Your reward is 40% of the offer's value. 
-                            This is a simulation; clicking 'Start Offer' will instantly grant the reward.
+                           Select an offer provider from the list below. Each provider has a unique set of tasks, surveys, and app installs for you to complete and earn coins.
                         </CardDescription>
                     </CardHeader>
                 </Card>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {offers.map((offer) => {
-                        const reward = calculateReward(offer.offerValue);
-                        return (
-                        <Card key={offer.id}>
-                            <CardHeader className="flex flex-row items-center gap-4 space-y-0">
-                                {offer.icon}
-                                <div>
-                                    <CardTitle className="text-lg">{offer.title}</CardTitle>
-                                    <CardDescription>{offer.description}</CardDescription>
-                                </div>
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {offerwalls.map((wall) => (
+                        <Card key={wall.id} className="flex flex-col">
+                            <CardHeader>
+                               <div className="flex justify-center mb-4">
+                                     <Image src={wall.logo} alt={`${wall.name} logo`} width={120} height={50} className="rounded-md" data-ai-hint="logo company"/>
+                               </div>
+                                <CardTitle className="text-center">{wall.name}</CardTitle>
+                                <CardDescription className="text-center min-h-[40px]">{wall.description}</CardDescription>
                             </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold text-primary text-center">
-                                    + {reward.toLocaleString()} Coins
-                                </div>
-                                <p className="text-xs text-muted-foreground text-center mt-1">(Offer Value: ₹{offer.offerValue})</p>
+                            <CardContent className="flex-grow">
+                                {/* Content can be added here if needed */}
                             </CardContent>
                             <CardFooter>
-                                <Button className="w-full" onClick={() => handleOfferComplete(reward)}>
-                                    Start Offer
+                                <Button className="w-full" onClick={() => handleViewOffers(wall.name)}>
+                                    View Offers
                                 </Button>
                             </CardFooter>
                         </Card>
-                    )})}
+                    ))}
                 </div>
                  <div className="mt-6 flex justify-center">
                     <div className="w-full h-24 bg-muted flex items-center justify-center rounded-lg">
