@@ -1,0 +1,31 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Users can only read and write their own document.
+    match /users/{userId} {
+      allow read, update, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Users can create withdrawal requests for themselves.
+    // They can only read their own withdrawal history.
+    match /withdrawals/{withdrawalId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+    }
+    
+    // The callback API needs to be able to create history entries.
+    // Users can read their own offer history.
+    match /offer_history/{offerId} {
+       allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+       allow create: if request.auth == null; // Allow server-side creation
+    }
+
+    // Default deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
