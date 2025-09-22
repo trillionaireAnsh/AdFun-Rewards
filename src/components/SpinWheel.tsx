@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -32,7 +33,7 @@ export const SpinWheel = ({ segments, onSpinEnd, rewardAmount, isSpinning, setIs
     <div className="relative flex flex-col items-center justify-center py-8">
         <div className="absolute top-[10px] z-10" style={{'borderLeft': '15px solid transparent', 'borderRight': '15px solid transparent', 'borderTop': '20px solid hsl(var(--primary))'}}></div>
         <div 
-            className="relative w-80 h-80 rounded-full border-8 border-primary transition-transform duration-[5000ms] ease-out-quad"
+            className="relative w-80 h-80 rounded-full border-8 border-primary transition-transform duration-5000 ease-out-quad"
             style={{ transform: `rotate(${rotation}deg)` }}
         >
             {segments.map((segment, index) => (
