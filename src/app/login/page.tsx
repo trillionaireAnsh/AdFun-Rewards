@@ -207,7 +207,7 @@ export default function LoginPage() {
       </Tabs>
       <div className="absolute bottom-4 text-center">
         <div className="text-sm text-muted-foreground">by</div>
-        <div className="text-xl font-semibold tracking-wider text-foreground">YADAVAS</div>
+        <p className="text-xl font-semibold tracking-wider text-foreground">YADAVAS</p>
       </div>
     </div>
   );
