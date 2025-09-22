@@ -1,25 +1,20 @@
 
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
+import { initializeApp, getApps, getApp, App, cert } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
 
-const firebaseConfig = {
-  "projectId": "adfun-rewards-dl24p",
-  "appId": "1:334398680055:web:768bd863f8d54780205cf2",
-  "apiKey": "AIzaSyDAOjQziyoVzeqHFfOQIXld-7LF4-nLAp4",
-  "authDomain": "adfun-rewards-dl24p.firebaseapp.com",
-  "measurementId": "",
-  "messagingSenderId": "334398680055",
-  "storageBucket": "adfun-rewards-dl24p.appspot.com"
-};
+const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
+    ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
+    : null;
 
-// Initialize Firebase
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const auth = getAuth(app);
+const adminApp = !getApps().length
+  ? serviceAccount
+    ? initializeApp({
+        credential: cert(serviceAccount)
+      })
+    : initializeApp()
+  : getApp();
 
-// Initialize Firestore with offline persistence
-const db = initializeFirestore(app, {
-    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
-});
 
-export { app, auth, db };
+const adminDb = getFirestore(adminApp);
+
+export { adminApp, adminDb };

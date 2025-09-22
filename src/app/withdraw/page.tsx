@@ -16,7 +16,7 @@ import { useCoins } from "@/context/CoinContext";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, DollarSign, History } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { db } from "@/lib/firebase";
+import { db } from "@/lib/firebase-client";
 import { collection, addDoc, query, where, orderBy, onSnapshot, Timestamp } from "firebase/firestore";
 
 // 1000 coins = 10 INR
@@ -68,7 +68,7 @@ export default function WithdrawPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      amount: '' as any,
+      amount: undefined,
       method: "",
       details: "",
     },

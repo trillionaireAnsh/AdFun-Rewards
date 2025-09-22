@@ -4,7 +4,7 @@
 import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { doc, getDoc, setDoc, onSnapshot, increment } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { db } from '@/lib/firebase-client';
 
 type CoinContextType = {
   coins: number;

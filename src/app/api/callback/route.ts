@@ -1,7 +1,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { initializeApp, getApps, App, cert } from 'firebase-admin/app';
-import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { FieldValue } from 'firebase-admin/firestore';
+import { adminDb } from '@/lib/firebase';
 
 // ========================================================================================
 // 1. HOW TO USE THIS POSTBACK URL
@@ -39,25 +39,6 @@ const ALLOWED_IPS = [
 
 const USER_REWARD_PERCENTAGE = 0.40; // 40% of the offer payout goes to the user
 const COINS_PER_DOLLAR = 10000; // 1 USD = 10,000 coins (e.g., $1 payout = 10,000 coins for you)
-
-// Initialize Firebase Admin SDK
-const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
-    ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
-    : null;
-
-if (!getApps().length) {
-  if (serviceAccount) {
-    initializeApp({
-      credential: cert(serviceAccount)
-    });
-  } else {
-    // This will likely only run in a local dev environment if the key isn't set
-    console.warn("Firebase Admin Initialized without service account. This is only suitable for local development.");
-    initializeApp();
-  }
-}
-
-const db = getFirestore();
 
 
 export async function GET(request: NextRequest) {
@@ -98,10 +79,10 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        const userDocRef = db.collection('users').doc(userId);
+        const userDocRef = adminDb.collection('users').doc(userId);
         
         // Use a transaction to safely update the user's coin balance
-        await db.runTransaction(async (transaction) => {
+        await adminDb.runTransaction(async (transaction) => {
             const userDoc = await transaction.get(userDocRef);
 
             if (!userDoc.exists) {
@@ -116,7 +97,7 @@ export async function GET(request: NextRequest) {
             });
 
             // Log the transaction for your records
-            const historyRef = db.collection('offer_history').doc();
+            const historyRef = adminDb.collection('offer_history').doc();
             transaction.set(historyRef, {
                 userId,
                 offerId,
