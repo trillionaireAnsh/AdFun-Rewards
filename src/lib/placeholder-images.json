@@ -1,0 +1,33 @@
+
+[
+    {
+        "id": 1,
+        "imageUrl": "https://picsum.photos/seed/offer1/600/400",
+        "alt": "Special game offer",
+        "aiHint": "game reward"
+    },
+    {
+        "id": 2,
+        "imageUrl": "https://picsum.photos/seed/offer2/600/400",
+        "alt": "Gift card promotion",
+        "aiHint": "gift card"
+    },
+    {
+        "id": 3,
+        "imageUrl": "https://picsum.photos/seed/offer3/600/400",
+        "alt": "Survey completion bonus",
+        "aiHint": "survey bonus"
+    },
+    {
+        "id": 4,
+        "imageUrl": "https://picsum.photos/seed/offer4/600/400",
+        "alt": "App download reward",
+        "aiHint": "mobile app"
+    },
+    {
+        "id": 5,
+        "imageUrl": "https://picsum.photos/seed/offer5/600/400",
+        "alt": "Shopping cashback offer",
+        "aiHint": "shopping cashback"
+    }
+]

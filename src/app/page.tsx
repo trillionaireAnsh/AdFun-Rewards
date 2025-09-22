@@ -11,6 +11,8 @@ import {
 import { RotateCw, Gift, Users, ShieldCheck, Wallet, Star } from "lucide-react";
 import Link from 'next/link';
 import Image from 'next/image';
+import offers from '@/lib/placeholder-images.json';
+
 
 const ScratchIcon = () => (
     <svg
@@ -108,11 +110,11 @@ export default function Home() {
             <h3 className="text-xl font-bold">Offers for you</h3>
             <Carousel opts={{ align: "start", loop: true }}>
                 <CarouselContent>
-                    {Array.from({ length: 5 }).map((_, index) => (
-                    <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                    {offers.map((offer) => (
+                    <CarouselItem key={offer.id} className="md:basis-1/2 lg:basis-1/3">
                         <Card>
                             <CardContent className="flex aspect-video items-center justify-center p-0 overflow-hidden rounded-lg">
-                                <Image src={`https://picsum.photos/600/400?random=${index}`} alt={`Offer ${index + 1}`} width={600} height={400} data-ai-hint="promotion offer"/>
+                                <Image src={offer.imageUrl} alt={offer.alt} width={600} height={400} data-ai-hint={offer.aiHint}/>
                             </CardContent>
                         </Card>
                     </CarouselItem>
