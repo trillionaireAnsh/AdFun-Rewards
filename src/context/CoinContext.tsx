@@ -36,8 +36,8 @@ export function CoinProvider({ children }: { children: ReactNode }) {
             setCoins(docSnap.data().coins || 0);
         } else {
             // If user doc doesn't exist, create it with initial coin balance
-            await setDoc(userDocRef, { coins: 1250, email: user.email });
-            setCoins(1250);
+            await setDoc(userDocRef, { coins: 0, email: user.email });
+            setCoins(0);
         }
         setIsLoading(false);
     }, (error) => {
