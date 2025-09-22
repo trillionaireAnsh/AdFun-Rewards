@@ -15,27 +15,28 @@ function AppContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (isLoading) return; // Wait until authentication status is resolved
+    if (isLoading) {
+      return; // Wait until authentication status is resolved
+    }
 
     const isAuthPage = pathname === '/login';
 
+    // If the user is not authenticated and not on the login page, redirect to login
     if (!isAuthenticated && !isAuthPage) {
-      router.push('/login');
-    } else if (isAuthenticated && isAuthPage) {
-      router.push('/');
+      router.replace('/login');
+    } 
+    // If the user is authenticated and on the login page, redirect to the dashboard
+    else if (isAuthenticated && isAuthPage) {
+      router.replace('/');
     }
   }, [isAuthenticated, isLoading, router, pathname]);
 
-  if (isLoading || (!isAuthenticated && pathname !== '/login')) {
+  // While loading authentication or if a redirect is imminent, show the splash screen
+  if (isLoading || (!isAuthenticated && pathname !== '/login') || (isAuthenticated && pathname === '/login')) {
     return <SplashScreen />;
   }
 
-  // If authenticated and on the login page, show splash while redirecting
-  if (isAuthenticated && pathname === '/login') {
-    return <SplashScreen />;
-  }
-  
-  // If authenticated and not on login page, show the app
+  // If authenticated and not on a public page, show the main app layout
   if (isAuthenticated) {
     return (
       <CoinProvider>
@@ -48,8 +49,8 @@ function AppContent({ children }: { children: React.ReactNode }) {
       </CoinProvider>
     );
   }
-  
-  // If not authenticated, and on the login page, show the login page
+
+  // Otherwise, show the children (this will be the login page)
   return <>{children}</>;
 }
 

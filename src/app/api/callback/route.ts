@@ -41,7 +41,6 @@ const USER_REWARD_PERCENTAGE = 0.40; // 40% of the offer payout goes to the user
 const COINS_PER_DOLLAR = 10000; // 1 USD = 10,000 coins (e.g., $1 payout = 10,000 coins for you)
 
 // Initialize Firebase Admin SDK
-// IMPORTANT: Make sure to set the FIREBASE_SERVICE_ACCOUNT_KEY environment variable in Vercel.
 const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
     ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
     : null;
