@@ -43,6 +43,18 @@ const offerwalls = [
         name: 'Wannads',
         description: 'Play games, take surveys and get rewarded.',
         logo: 'https://placehold.co/100x40/8E44AD/FFFFFF?text=Wannads'
+    },
+    {
+        id: 'monlix',
+        name: 'Monlix',
+        description: 'A variety of offers including games, apps, and surveys.',
+        logo: 'https://placehold.co/100x40/27303f/FFFFFF?text=Monlix'
+    },
+    {
+        id: 'revu',
+        name: 'Revu',
+        description: 'Complete simple tasks and get rewarded instantly.',
+        logo: 'https://placehold.co/100x40/367FFF/FFFFFF?text=Revu'
     }
 ];
 
@@ -60,7 +72,7 @@ export default function OfferWallPage() {
                         </CardDescription>
                     </CardHeader>
                 </Card>
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {offerwalls.map((wall) => (
                         <Card key={wall.id} className="flex flex-col">
                              <Link href={`/offer-wall/${wall.id}`} className="flex flex-col flex-grow">

@@ -15,8 +15,9 @@ function OfferwallEmbed({ providerId, userId }: { providerId: string, userId: st
 
     // IMPORTANT: Replace the examples below with the actual code from your provider.
     // Each provider will have a different way of integrating.
+    // The `userId` variable is available for you to pass into the script/iframe URL.
     switch (providerId) {
-        // --- EXAMPLE: AdGate Media ---
+        // --- AdGate Media ---
         // case 'adgatemedia':
         //     return (
         //         <>
@@ -29,7 +30,7 @@ function OfferwallEmbed({ providerId, userId }: { providerId: string, userId: st
         //         </>
         //     );
 
-        // --- EXAMPLE: OfferToro ---
+        // --- OfferToro ---
         // case 'offertoro':
         //     return (
         //         <iframe 
@@ -39,17 +40,29 @@ function OfferwallEmbed({ providerId, userId }: { providerId: string, userId: st
         //     );
         
         // --- PASTE YOUR OTHER PROVIDERS' CODE HERE ---
-        // case 'ayetstudios':
-        //     return ( <div>Paste Ayet-Studios code here.</div> );
+        case 'adgatemedia':
+             return ( <div>Paste AdGate Media code here.</div> );
 
-        // case 'adgem':
-        //     return ( <div>Paste AdGem code here.</div> );
+        case 'offertoro':
+            return ( <div>Paste OfferToro code here.</div> );
+        
+        case 'ayetstudios':
+            return ( <div>Paste Ayet-Studios code here.</div> );
 
-        // case 'cpxresearch':
-        //     return ( <div>Paste CPX Research code here.</div> );
+        case 'adgem':
+            return ( <div>Paste AdGem code here.</div> );
 
-        // case 'wannads':
-        //     return ( <div>Paste Wannads code here.</div> );
+        case 'cpxresearch':
+            return ( <div>Paste CPX Research code here.</div> );
+
+        case 'wannads':
+            return ( <div>Paste Wannads code here.</div> );
+        
+        case 'monlix':
+            return ( <div>Paste Monlix code here.</div> );
+
+        case 'revu':
+            return ( <div>Paste Revu code here.</div> );
 
         default:
             return (
