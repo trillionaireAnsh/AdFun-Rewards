@@ -1,8 +1,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import { initializeApp, getApps, App } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
-import { credential } from 'firebase-admin';
+import { initializeApp, getApps, App, cert } from 'firebase-admin/app';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 
 // ========================================================================================
 // 1. HOW TO USE THIS POSTBACK URL
@@ -42,22 +41,24 @@ const USER_REWARD_PERCENTAGE = 0.40; // 40% of the offer payout goes to the user
 const COINS_PER_DOLLAR = 10000; // 1 USD = 10,000 coins (e.g., $1 payout = 10,000 coins for you)
 
 // Initialize Firebase Admin SDK
-let adminApp: App;
-if (!getApps().length) {
-    // In a real production environment, use environment variables for service account keys
-    // For now, we check if the key is available as an env var.
-    const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
-        ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
-        : null;
+// IMPORTANT: Make sure to set the FIREBASE_SERVICE_ACCOUNT_KEY environment variable in Vercel.
+const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
+    ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
+    : null;
 
-    adminApp = initializeApp({
-        credential: serviceAccount ? credential.cert(serviceAccount) : undefined,
+if (!getApps().length) {
+  if (serviceAccount) {
+    initializeApp({
+      credential: cert(serviceAccount)
     });
-} else {
-    adminApp = getApps()[0];
+  } else {
+    // This will likely only run in a local dev environment if the key isn't set
+    console.warn("Firebase Admin Initialized without service account. This is only suitable for local development.");
+    initializeApp();
+  }
 }
 
-const db = getFirestore(adminApp);
+const db = getFirestore();
 
 
 export async function GET(request: NextRequest) {
@@ -112,7 +113,7 @@ export async function GET(request: NextRequest) {
 
             // Increment the user's coin balance
             transaction.update(userDocRef, {
-                coins: getFirestore.FieldValue.increment(userRewardInCoins)
+                coins: FieldValue.increment(userRewardInCoins)
             });
 
             // Log the transaction for your records
@@ -123,7 +124,7 @@ export async function GET(request: NextRequest) {
                 provider,
                 payout,
                 coinsAwarded: userRewardInCoins,
-                timestamp: getFirestore.FieldValue.serverTimestamp()
+                timestamp: FieldValue.serverTimestamp()
             });
         });
 
