@@ -2,7 +2,11 @@
 
 import { getApp, getApps, initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
+import { getFirestore, initializeFirestore } from "firebase/firestore";
+
+// IMPORTANT: Do NOT enable persistence here, as it conflicts with Next.js's
+// server-rendering environment and causes the "transport errored" issue.
+// The app will function in a stable, online-only mode.
 
 const firebaseConfig = {
     apiKey: "AIzaSyDAOjQziyoVzeqHFfOQIXld-7LF4-nLAp4",
@@ -16,10 +20,6 @@ const firebaseConfig = {
 // Initialize Firebase for the client
 const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
-
-// Initialize Firestore with persistence for the client
-const db = initializeFirestore(app, {
-    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
-});
+const db = getFirestore(app);
 
 export { app, auth, db };

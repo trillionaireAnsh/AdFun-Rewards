@@ -3,7 +3,7 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
-import { doc, getDoc, setDoc, increment } from 'firebase/firestore';
+import { doc, getDoc, setDoc, increment, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase-client';
 
 type CoinContextType = {
@@ -40,31 +40,47 @@ export function CoinProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Error fetching coins:", error);
-      // Keep existing coins if fetch fails
     } finally {
       setIsLoading(false);
     }
   }, [user]);
 
   useEffect(() => {
-    fetchCoins();
-  }, [fetchCoins]);
+    if (user) {
+        setIsLoading(true);
+        const userDocRef = doc(db, 'users', user.uid);
+        const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+            if (docSnap.exists()) {
+                setCoins(docSnap.data().coins || 0);
+            } else {
+                setCoins(0);
+            }
+            setIsLoading(false);
+        }, (error) => {
+            console.error("Error with real-time coin updates:", error);
+            setIsLoading(false);
+        });
+
+        return () => unsubscribe();
+    } else {
+        setCoins(0);
+        setIsLoading(false);
+    }
+  }, [user]);
+
 
   const addCoins = async (amount: number) => {
     if (!user) return;
     
-    // Optimistically update the local state for instant feedback
     const originalCoins = coins;
-    setCoins(prevCoins => prevCoins + amount);
+    setCoins(prevCoins => prevCoins + amount); // Optimistic update
 
     try {
       const userDocRef = doc(db, 'users', user.uid);
       await setDoc(userDocRef, { coins: increment(amount) }, { merge: true });
     } catch (error) {
       console.error("Failed to update coins in Firestore:", error);
-      // Revert the optimistic update on failure
-      setCoins(originalCoins);
-      // Optionally, show a toast to the user
+      setCoins(originalCoins); // Revert on failure
     }
   };
 
