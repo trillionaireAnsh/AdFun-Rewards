@@ -24,7 +24,7 @@ const CoinIcon = () => (
   );
 
 export function AppLayout({ children, title }: { children: ReactNode; title: string }) {
-  const { coins, isLoading: isCoinsLoading } = useCoins();
+  const { coins, isLoading: isCoinsLoading, refreshCoins } = useCoins();
   const { user, logout } = useAuth();
 
   return (
@@ -55,6 +55,7 @@ export function AppLayout({ children, title }: { children: ReactNode; title: str
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>{user?.email || "My Account"}</DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={refreshCoins}>Refresh Coins</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Terms &amp; Conditions</DropdownMenuItem>
               <DropdownMenuSeparator />
