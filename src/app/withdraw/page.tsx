@@ -16,7 +16,7 @@ import { useCoins } from "@/context/CoinContext";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, DollarSign, History } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { getDb } from "@/lib/firebase-client";
+import { db } from "@/lib/firebase-client";
 import { collection, addDoc, query, where, orderBy, onSnapshot, Timestamp } from "firebase/firestore";
 
 // 1000 coins = 10 INR
@@ -48,7 +48,6 @@ export default function WithdrawPage() {
 
   useEffect(() => {
     if (!user) return;
-    const db = getDb();
     const q = query(
       collection(db, "withdrawals"), 
       where("userId", "==", user.uid), 
@@ -92,7 +91,6 @@ export default function WithdrawPage() {
     }
 
     try {
-      const db = getDb();
       const newRequest: WithdrawalRequest = {
         userId: user.uid,
         amountCoins: amountInCoins,

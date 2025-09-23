@@ -1,20 +1,19 @@
+// THIS FILE IS FOR SERVER-SIDE FIREBASE (ADMIN) ONLY
 
-import { initializeApp, getApps, getApp, App, cert } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
+import { getApps as getAdminApps, getApp as getAdminApp, initializeApp as initializeAdminApp, type App as AdminApp, cert } from 'firebase-admin/app';
+import { getFirestore as getAdminFirestore } from 'firebase-admin/firestore';
 
 const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
     ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
     : null;
 
-const adminApp = !getApps().length
+// Initialize Firebase Admin SDK
+const adminApp: AdminApp = !getAdminApps().length
   ? serviceAccount
-    ? initializeApp({
-        credential: cert(serviceAccount)
-      })
-    : initializeApp()
-  : getApp();
+    ? initializeAdminApp({ credential: cert(serviceAccount) })
+    : initializeAdminApp()
+  : getAdminApp();
 
-
-const adminDb = getFirestore(adminApp);
+const adminDb = getAdminFirestore(adminApp);
 
 export { adminApp, adminDb };

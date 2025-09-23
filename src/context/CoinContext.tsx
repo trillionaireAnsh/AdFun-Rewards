@@ -4,7 +4,7 @@
 import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { doc, getDoc, setDoc, onSnapshot, increment } from 'firebase/firestore';
-import { getDb } from '@/lib/firebase-client';
+import { db } from '@/lib/firebase-client';
 
 type CoinContextType = {
   coins: number;
@@ -21,22 +21,18 @@ export function CoinProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!user) {
-      // If there's no user, we're not loading coins.
-      // This happens on logout.
       setIsLoading(false);
       setCoins(0);
       return;
     }
 
     setIsLoading(true);
-    const db = getDb();
     const userDocRef = doc(db, 'users', user.uid);
 
     const unsubscribe = onSnapshot(userDocRef, async (docSnap) => {
         if (docSnap.exists()) {
             setCoins(docSnap.data().coins || 0);
         } else {
-            // If user doc doesn't exist, create it with initial coin balance
             await setDoc(userDocRef, { coins: 0, email: user.email });
             setCoins(0);
         }
@@ -46,15 +42,12 @@ export function CoinProvider({ children }: { children: ReactNode }) {
         setIsLoading(false);
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, [user]);
 
   const addCoins = async (amount: number) => {
     if (!user) return;
-    const db = getDb();
     const userDocRef = doc(db, 'users', user.uid);
-    // We don't need to update the state here, onSnapshot will do it automatically
     await setDoc(userDocRef, { coins: increment(amount) }, { merge: true });
   };
   
