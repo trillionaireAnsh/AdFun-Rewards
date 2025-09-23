@@ -4,7 +4,7 @@
 import { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { doc, getDoc, setDoc, onSnapshot, increment } from 'firebase/firestore';
-import { db } from '@/lib/firebase-client';
+import { getDb } from '@/lib/firebase-client';
 
 type CoinContextType = {
   coins: number;
@@ -29,6 +29,7 @@ export function CoinProvider({ children }: { children: ReactNode }) {
     }
 
     setIsLoading(true);
+    const db = getDb();
     const userDocRef = doc(db, 'users', user.uid);
 
     const unsubscribe = onSnapshot(userDocRef, async (docSnap) => {
@@ -51,6 +52,7 @@ export function CoinProvider({ children }: { children: ReactNode }) {
 
   const addCoins = async (amount: number) => {
     if (!user) return;
+    const db = getDb();
     const userDocRef = doc(db, 'users', user.uid);
     // We don't need to update the state here, onSnapshot will do it automatically
     await setDoc(userDocRef, { coins: increment(amount) }, { merge: true });
