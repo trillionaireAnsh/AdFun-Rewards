@@ -2,7 +2,7 @@
 
 import { getApp, getApps, initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, initializeFirestore } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 
 // IMPORTANT: Do NOT enable persistence here, as it conflicts with Next.js's
 // server-rendering environment and causes the "transport errored" issue.
@@ -21,5 +21,6 @@ const firebaseConfig = {
 const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
 const db = getFirestore(app);
+
 
 export { app, auth, db };
