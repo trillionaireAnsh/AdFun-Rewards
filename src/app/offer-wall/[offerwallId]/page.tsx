@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -6,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useAuth } from "@/context/AuthContext";
 import { useParams } from "next/navigation";
 import Script from 'next/script';
+import { Rocket } from "lucide-react";
 
 // This component is where you'll paste the code from your offerwall provider.
 function OfferwallEmbed({ providerId, userId }: { providerId: string, userId: string | null }) {
@@ -40,39 +42,17 @@ function OfferwallEmbed({ providerId, userId }: { providerId: string, userId: st
         //     );
         
         // --- PASTE YOUR OTHER PROVIDERS' CODE HERE ---
-        case 'adgatemedia':
-             return ( <div>Paste AdGate Media code here.</div> );
-
-        case 'offertoro':
-            return ( <div>Paste OfferToro code here.</div> );
-        
-        case 'ayetstudios':
-            return ( <div>Paste Ayet-Studios code here.</div> );
-
-        case 'adgem':
-            return ( <div>Paste AdGem code here.</div> );
-
-        case 'cpxresearch':
-            return ( <div>Paste CPX Research code here.</div> );
-
-        case 'wannads':
-            return ( <div>Paste Wannads code here.</div> );
-        
-        case 'monlix':
-            return ( <div>Paste Monlix code here.</div> );
-
-        case 'revu':
-            return ( <div>Paste Revu code here.</div> );
 
         default:
             return (
                 <div className="text-center text-muted-foreground p-8">
+                    <Rocket className="mx-auto h-12 w-12 mb-4" />
                     <h3 className="font-bold text-lg text-foreground">Integration Required</h3>
                     <p>
                         The offer wall for <span className="font-semibold capitalize">{providerId}</span> is not configured yet.
                     </p>
                     <p className="mt-4 text-sm">
-                        Please paste the provider's script or iframe into the file:
+                        To show live offers, paste the provider's code snippet into:
                         <br />
                         <code className="bg-muted px-2 py-1 rounded-md text-primary mt-2 inline-block">
                             src/app/offer-wall/[offerwallId]/page.tsx
