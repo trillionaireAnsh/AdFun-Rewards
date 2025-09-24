@@ -9,12 +9,12 @@ import { getFirestore } from "firebase/firestore";
 // The app will function in a stable, online-only mode.
 
 const firebaseConfig = {
+    projectId: "adfun-rewards-dl24p",
+    appId: "1:334398680055:web:768bd863f8d54780205cf2",
     apiKey: "AIzaSyDAOjQziyoVzeqHFfOQIXld-7LF4-nLAp4",
     authDomain: "adfun-rewards-dl24p.firebaseapp.com",
-    projectId: "adfun-rewards-dl24p",
-    storageBucket: "adfun-rewards-dl24p.appspot.com",
-    messagingSenderId: "334398680055",
-    appId: "1:334398680055:web:768bd863f8d54780205cf2"
+    measurementId: "",
+    messagingSenderId: "334398680055"
 };
 
 // Initialize Firebase for the client
