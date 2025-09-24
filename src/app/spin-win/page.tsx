@@ -8,6 +8,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useCoins } from '@/context/CoinContext';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SpinWheel } from '@/components/SpinWheel';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Loader2 } from 'lucide-react';
 
 const segments = [5, 8, 6, 9, 7, 5, 8, 6];
 
@@ -16,18 +18,26 @@ export default function SpinAndWinPage() {
     const { addCoins } = useCoins();
     const [reward, setReward] = useState(0);
     const [isSpinning, setIsSpinning] = useState(false);
+    const [isWatchingAd, setIsWatchingAd] = useState(false);
     const [spinsLeft, setSpinsLeft] = useState(5);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleSpinClick = async () => {
         if (spinsLeft <= 0) {
             toast({ variant: 'destructive', title: "No spins left for today!" });
             return;
         }
-        if (isSpinning) return;
+        if (isSpinning || isWatchingAd) return;
 
-        setIsSpinning(true);
-        const randomSegment = segments[Math.floor(Math.random() * segments.length)];
-        setReward(randomSegment);
+        setIsWatchingAd(true);
+        // Simulate watching an ad
+        setTimeout(() => {
+            setIsWatchingAd(false);
+            setIsSpinning(true);
+            setIsDialogOpen(false); // Close dialog
+            const randomSegment = segments[Math.floor(Math.random() * segments.length)];
+            setReward(randomSegment);
+        }, 1500);
     };
 
     const handleSpinEnd = (coins: number) => {
@@ -59,14 +69,32 @@ export default function SpinAndWinPage() {
                             setIsSpinning={setIsSpinning}
                          />
 
-                        <Button 
-                            size="lg" 
-                            className="w-full font-bold text-lg py-7" 
-                            onClick={handleSpinClick}
-                            disabled={isSpinning || spinsLeft <= 0}
-                        >
-                            {isSpinning ? 'Spinning...' : 'SPIN NOW'}
-                        </Button>
+                        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                            <AlertDialogTrigger asChild>
+                                <Button 
+                                    size="lg" 
+                                    className="w-full font-bold text-lg py-7" 
+                                    disabled={isSpinning || spinsLeft <= 0}
+                                >
+                                    {isSpinning ? 'Spinning...' : 'SPIN NOW'}
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                <AlertDialogTitle>Watch an Ad to Spin?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    A short video ad will play. After the ad, the wheel will spin for your reward!
+                                </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                <AlertDialogCancel disabled={isWatchingAd}>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={handleSpinClick} disabled={isWatchingAd}>
+                                    {isWatchingAd && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    Watch Ad & Spin
+                                </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     </CardContent>
                 </Card>
             </div>
