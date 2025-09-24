@@ -1,8 +1,14 @@
+
 // THIS FILE IS FOR CLIENT-SIDE FIREBASE ONLY
 
 import { getApp, getApps, initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+
+// IMPORTANT: Do NOT enable persistence here, as it conflicts with Next.js's
+// server-rendering environment and causes the "transport errored" issue.
+// The app will function in a stable, online-only mode.
 
 const firebaseConfig = {
     projectId: "adfun-rewards-dl24p",
@@ -14,10 +20,12 @@ const firebaseConfig = {
     messagingSenderId: "334398680055"
 };
 
+
 // Initialize Firebase for the client
 const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 
-export { app, auth, db };
+export { app, auth, db, storage };
