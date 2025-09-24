@@ -11,6 +11,13 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import {
   Home,
   Gift,
   Users,
@@ -62,12 +69,12 @@ const menuItems = [
   { href: "/withdraw", label: "Withdraw", icon: Wallet },
 ];
 
-const footerMenuItems = [
+const settingsMenuItems = [
   { href: "/help-faqs", label: "Help/FAQs", icon: HelpCircle },
   { href: "/contact-us", label: "Contact Us", icon: Mail },
   { href: "/privacy-policy", label: "Privacy Policy", icon: Shield },
   { href: "/terms-and-conditions", label: "Terms & Conditions", icon: FileText },
-]
+];
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -94,21 +101,24 @@ export function AppSidebar() {
             </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="p-2 flex flex-col gap-1">
-            <SidebarMenu>
-                 {footerMenuItems.map((item) => (
-                <SidebarMenuItem key={item.label}>
-                    <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={{children: item.label, side:"right"}}>
-                        <Link href={item.href}>
-                            <item.icon />
-                            <span>{item.label}</span>
-                        </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            ))}
-            </SidebarMenu>
-            <Button variant="ghost" className="w-full justify-start gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2 mt-2">
-                <Settings /> <span className="group-data-[collapsible=icon]:hidden">Settings</span>
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="w-full justify-start gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2 mt-2">
+                    <Settings /> <span className="group-data-[collapsible=icon]:hidden">Settings</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" side="top">
+                {settingsMenuItems.map((item) => (
+                   <DropdownMenuItem key={item.label} asChild>
+                     <Link href={item.href}>
+                        <item.icon className="mr-2 h-4 w-4" />
+                        <span>{item.label}</span>
+                     </Link>
+                   </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Button variant="ghost" className="w-full justify-start gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2" onClick={logout}>
                 <LogOut /> <span className="group-data-[collapsible=icon]:hidden">Logout</span>
             </Button>

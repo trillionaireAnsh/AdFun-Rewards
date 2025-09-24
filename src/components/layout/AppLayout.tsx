@@ -57,13 +57,6 @@ export function AppLayout({ children, title }: { children: ReactNode; title: str
               <DropdownMenuLabel>{user?.email || "My Account"}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onSelect={refreshCoins}>Refresh Coins</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-               <DropdownMenuItem asChild>
-                <Link href="/help-faqs">Help</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/terms-and-conditions">Terms &amp; Conditions</Link>
-              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
