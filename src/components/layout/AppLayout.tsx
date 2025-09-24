@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
 import { Skeleton } from "../ui/skeleton";
+import Link from "next/link";
 
 const CoinIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-yellow-500">
@@ -57,7 +58,12 @@ export function AppLayout({ children, title }: { children: ReactNode; title: str
               <DropdownMenuSeparator />
               <DropdownMenuItem onSelect={refreshCoins}>Refresh Coins</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Terms &amp; Conditions</DropdownMenuItem>
+               <DropdownMenuItem asChild>
+                <Link href="/help-faqs">Help</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/terms-and-conditions">Terms &amp; Conditions</Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
             </DropdownMenuContent>

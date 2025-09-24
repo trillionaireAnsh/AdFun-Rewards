@@ -20,12 +20,16 @@ import {
   ShieldCheck,
   Star,
   Wallet,
+  Mail,
+  HelpCircle,
+  Shield,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { Logo } from "../Logo";
+import { FileText } from "../icons/FileText";
 
 const ScratchIcon = () => (
   <svg
@@ -58,6 +62,13 @@ const menuItems = [
   { href: "/withdraw", label: "Withdraw", icon: Wallet },
 ];
 
+const footerMenuItems = [
+  { href: "/help-faqs", label: "Help/FAQs", icon: HelpCircle },
+  { href: "/contact-us", label: "Contact Us", icon: Mail },
+  { href: "/privacy-policy", label: "Privacy Policy", icon: Shield },
+  { href: "/terms-and-conditions", label: "Terms & Conditions", icon: FileText },
+]
+
 export function AppSidebar() {
   const pathname = usePathname();
   const { logout } = useAuth();
@@ -82,8 +93,20 @@ export function AppSidebar() {
             ))}
             </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter className="p-2 flex flex-col gap-2">
-            <Button variant="ghost" className="w-full justify-start gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2">
+        <SidebarFooter className="p-2 flex flex-col gap-1">
+            <SidebarMenu>
+                 {footerMenuItems.map((item) => (
+                <SidebarMenuItem key={item.label}>
+                    <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={{children: item.label, side:"right"}}>
+                        <Link href={item.href}>
+                            <item.icon />
+                            <span>{item.label}</span>
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+            ))}
+            </SidebarMenu>
+            <Button variant="ghost" className="w-full justify-start gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2 mt-2">
                 <Settings /> <span className="group-data-[collapsible=icon]:hidden">Settings</span>
             </Button>
             <Button variant="ghost" className="w-full justify-start gap-2 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-2" onClick={logout}>
