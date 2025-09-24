@@ -1,29 +1,30 @@
-
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Users can only read and write their own document.
+  
+    // Users can only read and write their own data.
+    // They can create their own user document upon signup.
     match /users/{userId} {
-      allow read, update, write: if request.auth != null && request.auth.uid == userId;
-    }
-
-    // Users can create withdrawal requests for themselves.
-    // They can only read their own withdrawal history.
-    match /withdrawals/{withdrawalId} {
-      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow read, update, delete: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null;
     }
     
-    // The callback API needs to be able to create history entries.
-    // Users can read their own offer history.
-    match /offer_history/{offerId} {
+    // Users can create and read their own withdrawal requests.
+    // Admin/server process will handle updates/deletions.
+    match /withdrawals/{withdrawalId} {
+      allow read, create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+      allow update, delete: if false; // Prevent users from modifying requests
+    }
+    
+    // Offer history is written by the server-side callback.
+    // Users should only be able to read their own history.
+    match /offer_history/{historyId} {
        allow read: if request.auth != null && request.auth.uid == resource.data.userId;
-       allow create: if request.auth == null; // Allow server-side creation
+       allow create, update, delete: if false; // Only server can write
     }
 
-    // Default deny all other access
+    // Default deny all other collections
     match /{document=**} {
       allow read, write: if false;
     }

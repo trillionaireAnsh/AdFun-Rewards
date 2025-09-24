@@ -25,6 +25,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
+import { Logo } from "../Logo";
 
 const ScratchIcon = () => (
   <svg
@@ -63,9 +64,9 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="border-r" collapsible="icon">
-        <SidebarHeader className="p-4 flex items-center justify-center">
-            <h1 className="text-2xl font-bold text-primary group-data-[collapsible=icon]:hidden">AdFun</h1>
-            <h1 className="text-2xl font-bold text-primary hidden group-data-[collapsible=icon]:block">A</h1>
+        <SidebarHeader className="p-4 flex items-center justify-center gap-2">
+            <Logo className="w-7 h-7 group-data-[collapsible=icon]:w-8 group-data-[collapsible=icon]:h-8 transition-all"/>
+            <h1 className="text-xl font-bold text-primary group-data-[collapsible=icon]:hidden">AdFun Rewards</h1>
         </SidebarHeader>
         <SidebarContent>
             <SidebarMenu>

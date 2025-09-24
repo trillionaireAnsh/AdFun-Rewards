@@ -1,4 +1,4 @@
-"use client";
+
 "use client";
 
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import Image from 'next/image';
 import Link from "next/link";
+import { Rocket } from "lucide-react";
 
 const offerwalls = [
     {
@@ -95,11 +96,12 @@ export default function OfferWallPage() {
                         </Card>
                     ))}
                 </div>
-                 <div className="mt-6 flex justify-center">
-                    <div className="w-full h-24 bg-muted flex items-center justify-center rounded-lg">
-                        <p className="text-muted-foreground">Offer Wall Ad Placeholder</p>
-                    </div>
-                </div>
+                 <Card className="mt-6 text-center flex flex-col items-center justify-center p-8 bg-gradient-to-br from-primary/10 to-primary/20 border-primary/20">
+                    <Rocket className="h-12 w-12 text-primary mb-4"/>
+                    <h3 className="text-xl font-bold text-primary">Promote Your App!</h3>
+                    <p className="text-muted-foreground mt-2 max-w-md">Want to feature your app or service here? Reach thousands of engaged users. Contact us for advertising opportunities.</p>
+                     <Button className="mt-6">Contact Sales</Button>
+                </Card>
             </div>
         </AppLayout>
     );
