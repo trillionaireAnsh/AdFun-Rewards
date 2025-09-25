@@ -36,19 +36,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const uploadProfilePicture = async (file: File) => {
-    if (!user) return;
+    if (!auth.currentUser) return;
     
-    const storageRef = ref(storage, `profile-pictures/${user.uid}`);
+    const storageRef = ref(storage, `profile-pictures/${auth.currentUser.uid}`);
     
     try {
         toast({ title: 'Uploading...', description: 'Your new profile picture is being uploaded.' });
         await uploadBytes(storageRef, file);
         const downloadURL = await getDownloadURL(storageRef);
         
-        await updateProfile(user, { photoURL: downloadURL });
+        await updateProfile(auth.currentUser, { photoURL: downloadURL });
 
-        // Create a new user object with the updated photoURL to trigger a re-render
-        setUser({ ...user, photoURL: downloadURL });
+        // Reload the user to get the updated profile information
+        await auth.currentUser.reload();
+        // The onAuthStateChanged listener will handle updating the state
+        setUser(auth.currentUser);
+
 
         toast({ title: 'Success!', description: 'Your profile picture has been updated.' });
     } catch (error) {
