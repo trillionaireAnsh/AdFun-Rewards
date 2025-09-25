@@ -1,3 +1,4 @@
+
 // THIS FILE IS FOR SERVER-SIDE FIREBASE (ADMIN) ONLY
 
 import { getApps as getAdminApps, getApp as getAdminApp, initializeApp as initializeAdminApp, type App as AdminApp, cert } from 'firebase-admin/app';
