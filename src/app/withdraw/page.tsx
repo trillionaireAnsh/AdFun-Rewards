@@ -14,10 +14,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useCoins } from "@/context/CoinContext";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, DollarSign, History } from "lucide-react";
+import { Loader2, DollarSign, History, Info } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/lib/firebase-client";
 import { collection, addDoc, query, where, orderBy, onSnapshot, Timestamp } from "firebase/firestore";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // 1000 coins = 10 INR
 const CONVERSION_RATE = 100; // 1 INR = 100 coins
@@ -186,6 +187,13 @@ export default function WithdrawPage() {
                  <div className="p-4 bg-muted rounded-md text-center font-medium">
                     You will spend: <span className="text-primary font-bold">{amountInCoins.toLocaleString()}</span> coins
                  </div>
+                 <Alert>
+                    <Info className="h-4 w-4" />
+                    <AlertTitle>Payout Information</AlertTitle>
+                    <AlertDescription>
+                        Your payout will be sent within 7–8 days after your withdrawal request.
+                    </AlertDescription>
+                </Alert>
                 <Button type="submit" disabled={isLoading || amountInCoins > coins || amountInCoins <= 0} className="w-full" size="lg">
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {amountInCoins > coins ? "Not Enough Coins" : "Request Withdrawal"}
@@ -233,3 +241,5 @@ export default function WithdrawPage() {
     </AppLayout>
   );
 }
+
+    
