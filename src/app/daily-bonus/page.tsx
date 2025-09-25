@@ -8,14 +8,12 @@ import { useToast } from '@/hooks/use-toast';
 import { useCoins } from '@/context/CoinContext';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Gift, Loader2 } from 'lucide-react';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 export default function DailyBonusPage() {
     const { toast } = useToast();
     const { addCoins } = useCoins();
     const [isLoading, setIsLoading] = useState(false);
     const [isClaimed, setIsClaimed] = useState(false);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     useEffect(() => {
         const today = new Date().toISOString().split('T')[0];
@@ -27,10 +25,10 @@ export default function DailyBonusPage() {
 
     const handleClaimClick = () => {
         setIsLoading(true);
-        // Simulate watching an ad
+        // Simulate a short delay for feedback
         setTimeout(() => {
             handleReward();
-        }, 1500);
+        }, 500);
     };
 
     const handleReward = () => {
@@ -41,7 +39,6 @@ export default function DailyBonusPage() {
         localStorage.setItem('dailyBonusClaimed', today);
         
         setIsClaimed(true);
-        setIsDialogOpen(false); // Close the dialog
         
         toast({
             title: "Daily Bonus Claimed!",
@@ -60,7 +57,7 @@ export default function DailyBonusPage() {
                         <CardDescription>
                             {isClaimed 
                                 ? "You have already claimed your bonus for today. See you tomorrow!" 
-                                : "Watch a short ad to claim your daily reward."
+                                : "Click the button below to claim your daily reward."
                             }
                         </CardDescription>
                     </CardHeader>
@@ -69,32 +66,15 @@ export default function DailyBonusPage() {
                            <Gift className="w-24 h-24 text-primary" />
                         </div>
 
-                        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                            <AlertDialogTrigger asChild>
-                                 <Button
-                                    size="lg"
-                                    className="w-full font-bold text-lg py-7"
-                                    disabled={isClaimed}
-                                >
-                                    {isClaimed ? 'Claimed for Today' : 'Claim 8 Coins'}
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                <AlertDialogTitle>Watch an Ad to Earn Coins?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    To receive your daily bonus, a short video ad will play. After the ad, you'll be rewarded with 8 coins.
-                                </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                <AlertDialogCancel onClick={() => setIsLoading(false)} disabled={isLoading}>Cancel</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleClaimClick} disabled={isLoading}>
-                                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    Watch Ad & Claim
-                                </AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                         <Button
+                            size="lg"
+                            className="w-full font-bold text-lg py-7"
+                            disabled={isClaimed || isLoading}
+                            onClick={handleClaimClick}
+                        >
+                            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {isClaimed ? 'Claimed for Today' : 'Claim 8 Coins'}
+                        </Button>
                     </CardContent>
                 </Card>
             </div>
