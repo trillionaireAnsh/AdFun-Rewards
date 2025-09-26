@@ -18,3 +18,4 @@ const adminApp: AdminApp = !getAdminApps().length
 const adminDb = getAdminFirestore(adminApp);
 
 export { adminApp, adminDb };
+
