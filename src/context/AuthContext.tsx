@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         // Reload the user to get the updated profile information
         await auth.currentUser.reload();
-        // The onAuthStateChanged listener will handle updating the state
+        // Manually set the user state to trigger a re-render with the new photo
         setUser(auth.currentUser);
 
 
