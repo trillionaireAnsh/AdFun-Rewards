@@ -25,14 +25,21 @@ export default function ScratchCardPage() {
     // Load state from local storage on mount
     useEffect(() => {
         const today = new Date().toISOString().split('T')[0];
-        const storedCards = localStorage.getItem(`scratchCardsState_${today}`);
-        if (storedCards) {
-            setCards(JSON.parse(storedCards));
+        const storedState = localStorage.getItem('scratchCardState');
+        
+        if (storedState) {
+            const { date, cards: storedCards } = JSON.parse(storedState);
+            if (date === today) {
+                setCards(storedCards);
+            } else {
+                // New day, reset the cards
+                const newDayCards = initialDailyCards.map(c => ({...c, isScratched: false}));
+                setCards(newDayCards);
+                localStorage.setItem('scratchCardState', JSON.stringify({ date: today, cards: newDayCards }));
+            }
         } else {
-             // Set all cards to not scratched for the new day
-            const newDayCards = initialDailyCards.map(c => ({...c, isScratched: false}));
-            setCards(newDayCards);
-            localStorage.setItem(`scratchCardsState_${today}`, JSON.stringify(newDayCards));
+            // No state stored, initialize for today
+            localStorage.setItem('scratchCardState', JSON.stringify({ date: today, cards: initialDailyCards }));
         }
 
         const lastScratchTime = localStorage.getItem('scratchCardLastScratch');
@@ -47,7 +54,7 @@ export default function ScratchCardPage() {
     // Save state to local storage whenever it changes
     useEffect(() => {
         const today = new Date().toISOString().split('T')[0];
-        localStorage.setItem(`scratchCardsState_${today}`, JSON.stringify(cards));
+        localStorage.setItem('scratchCardState', JSON.stringify({ date: today, cards: cards }));
     }, [cards]);
 
     useEffect(() => {

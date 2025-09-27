@@ -12,16 +12,34 @@ import { Loader2 } from 'lucide-react';
 
 const segments = [5, 8, 6, 9, 7, 5, 8, 6];
 const COOLDOWN_SECONDS = 30;
+const MAX_SPINS_PER_DAY = 5;
 
 export default function SpinAndWinPage() {
     const { toast } = useToast();
     const { addCoins } = useCoins();
     const [reward, setReward] = useState(0);
     const [isSpinning, setIsSpinning] = useState(false);
-    const [spinsLeft, setSpinsLeft] = useState(5);
+    const [spinsLeft, setSpinsLeft] = useState(MAX_SPINS_PER_DAY);
     const [cooldown, setCooldown] = useState(0);
 
     useEffect(() => {
+        const today = new Date().toISOString().split('T')[0];
+        const storedState = localStorage.getItem('spinWinState');
+
+        if (storedState) {
+            const { date, spins } = JSON.parse(storedState);
+            if (date === today) {
+                setSpinsLeft(spins);
+            } else {
+                // New day, reset spins
+                setSpinsLeft(MAX_SPINS_PER_DAY);
+                localStorage.setItem('spinWinState', JSON.stringify({ date: today, spins: MAX_SPINS_PER_DAY }));
+            }
+        } else {
+             // No state stored, initialize for today
+            localStorage.setItem('spinWinState', JSON.stringify({ date: today, spins: MAX_SPINS_PER_DAY }));
+        }
+
         const lastSpinTime = localStorage.getItem('spinWinLastSpin');
         if (lastSpinTime) {
             const timePassed = (Date.now() - parseInt(lastSpinTime, 10)) / 1000;
@@ -61,10 +79,23 @@ export default function SpinAndWinPage() {
             duration: 3000,
         });
         setReward(0); // Reset for next spin
-        setSpinsLeft(prev => prev - 1);
+        
+        const newSpinsLeft = spinsLeft - 1;
+        setSpinsLeft(newSpinsLeft);
+        const today = new Date().toISOString().split('T')[0];
+        localStorage.setItem('spinWinState', JSON.stringify({ date: today, spins: newSpinsLeft }));
         localStorage.setItem('spinWinLastSpin', Date.now().toString());
+
         setCooldown(COOLDOWN_SECONDS);
     };
+
+    // This effect should run after the spin has ended and state is updated.
+    useEffect(() => {
+        if (!isSpinning && reward === 0) {
+            // This condition is met after a spin completes and state is reset.
+        }
+    }, [isSpinning, reward]);
+
 
     return (
         <AppLayout title="Spin & Win">
@@ -92,7 +123,9 @@ export default function SpinAndWinPage() {
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             ) : cooldown > 0 ? (
                                 `Wait ${cooldown}s`
-                            ): (
+                            ) : spinsLeft <= 0 ? (
+                                'No Spins Left'
+                            ) : (
                                 'SPIN NOW'
                             )}
                         </Button>
