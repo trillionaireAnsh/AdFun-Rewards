@@ -9,11 +9,14 @@ import { useCoins } from '@/context/CoinContext';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Gift, Loader2 } from 'lucide-react';
 
+const COOLDOWN_SECONDS = 30;
+
 export default function DailyBonusPage() {
     const { toast } = useToast();
     const { addCoins } = useCoins();
     const [isLoading, setIsLoading] = useState(false);
     const [isClaimed, setIsClaimed] = useState(false);
+    const [cooldown, setCooldown] = useState(0);
 
     useEffect(() => {
         const today = new Date().toISOString().split('T')[0];
@@ -21,7 +24,24 @@ export default function DailyBonusPage() {
         if (lastClaimedDate === today) {
             setIsClaimed(true);
         }
+
+        const lastClaimTime = localStorage.getItem('dailyBonusLastClaim');
+        if(lastClaimTime) {
+            const timePassed = (Date.now() - parseInt(lastClaimTime, 10)) / 1000;
+            if(timePassed < COOLDOWN_SECONDS) {
+                setCooldown(Math.ceil(COOLDOWN_SECONDS - timePassed));
+            }
+        }
     }, []);
+
+    useEffect(() => {
+        if (cooldown > 0) {
+            const timer = setInterval(() => {
+                setCooldown((prev) => prev - 1);
+            }, 1000);
+            return () => clearInterval(timer);
+        }
+    }, [cooldown]);
 
     const handleClaimClick = () => {
         setIsLoading(true);
@@ -37,8 +57,10 @@ export default function DailyBonusPage() {
         
         const today = new Date().toISOString().split('T')[0];
         localStorage.setItem('dailyBonusClaimed', today);
-        
+        localStorage.setItem('dailyBonusLastClaim', Date.now().toString());
+
         setIsClaimed(true);
+        setCooldown(COOLDOWN_SECONDS);
         
         toast({
             title: "Daily Bonus Claimed!",
@@ -69,11 +91,18 @@ export default function DailyBonusPage() {
                          <Button
                             size="lg"
                             className="w-full font-bold text-lg py-7"
-                            disabled={isClaimed || isLoading}
+                            disabled={isClaimed || isLoading || cooldown > 0}
                             onClick={handleClaimClick}
                         >
-                            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {isClaimed ? 'Claimed for Today' : 'Claim 8 Coins'}
+                            {isLoading ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : isClaimed ? (
+                                'Claimed for Today'
+                            ) : cooldown > 0 ? (
+                                `Wait ${cooldown}s`
+                            ) : (
+                                'Claim 8 Coins'
+                            )}
                         </Button>
                     </CardContent>
                 </Card>

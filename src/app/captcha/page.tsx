@@ -40,15 +40,34 @@ const generateCaptcha = () => {
     return captcha;
 };
 
+const COOLDOWN_SECONDS = 30;
+
 export default function CaptchaPage() {
   const { toast } = useToast();
   const { addCoins } = useCoins();
   const [isLoading, setIsLoading] = useState(false);
   const [captchaText, setCaptchaText] = useState("");
+  const [cooldown, setCooldown] = useState(0);
 
   useEffect(() => {
     setCaptchaText(generateCaptcha());
+    const lastAttemptTime = localStorage.getItem('captchaLastAttempt');
+    if (lastAttemptTime) {
+      const timePassed = (Date.now() - parseInt(lastAttemptTime, 10)) / 1000;
+      if (timePassed < COOLDOWN_SECONDS) {
+        setCooldown(Math.ceil(COOLDOWN_SECONDS - timePassed));
+      }
+    }
   }, []);
+
+  useEffect(() => {
+    if (cooldown > 0) {
+      const timer = setInterval(() => {
+        setCooldown((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [cooldown]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -71,6 +90,8 @@ export default function CaptchaPage() {
     });
     handleRefresh();
     setIsLoading(false);
+    localStorage.setItem('captchaLastAttempt', Date.now().toString());
+    setCooldown(COOLDOWN_SECONDS);
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -105,7 +126,7 @@ export default function CaptchaPage() {
             <div className="bg-muted px-6 py-3 rounded-md select-none tracking-[.5em] font-mono text-2xl font-bold line-through">
                 {captchaText}
             </div>
-            <Button variant="ghost" size="icon" onClick={handleRefresh}>
+            <Button variant="ghost" size="icon" onClick={handleRefresh} disabled={cooldown > 0}>
                 <RefreshCw className="h-5 w-5"/>
                 <span className="sr-only">Refresh Captcha</span>
             </Button>
@@ -122,15 +143,21 @@ export default function CaptchaPage() {
                       <Input
                         placeholder="Enter the text above"
                         {...field}
+                        disabled={cooldown > 0 || isLoading}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isLoading} size="lg" className="w-full">
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Submit and Earn
+              <Button type="submit" disabled={isLoading || cooldown > 0} size="lg" className="w-full">
+                {isLoading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : cooldown > 0 ? (
+                  `Wait ${cooldown}s`
+                ) : (
+                  "Submit and Earn"
+                )}
               </Button>
             </form>
           </Form>

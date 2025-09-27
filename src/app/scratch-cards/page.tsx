@@ -14,10 +14,13 @@ const initialDailyCards = [
     { id: 3, reward: 6, isScratched: false },
 ];
 
+const COOLDOWN_SECONDS = 30;
+
 export default function ScratchCardPage() {
     const { toast } = useToast();
     const { addCoins } = useCoins();
     const [cards, setCards] = useState(initialDailyCards);
+    const [cooldown, setCooldown] = useState(0);
 
     // Load state from local storage on mount
     useEffect(() => {
@@ -31,6 +34,14 @@ export default function ScratchCardPage() {
             setCards(newDayCards);
             localStorage.setItem(`scratchCardsState_${today}`, JSON.stringify(newDayCards));
         }
+
+        const lastScratchTime = localStorage.getItem('scratchCardLastScratch');
+        if (lastScratchTime) {
+            const timePassed = (Date.now() - parseInt(lastScratchTime, 10)) / 1000;
+            if (timePassed < COOLDOWN_SECONDS) {
+                setCooldown(Math.ceil(COOLDOWN_SECONDS - timePassed));
+            }
+        }
     }, []);
 
     // Save state to local storage whenever it changes
@@ -39,12 +50,33 @@ export default function ScratchCardPage() {
         localStorage.setItem(`scratchCardsState_${today}`, JSON.stringify(cards));
     }, [cards]);
 
+    useEffect(() => {
+        if (cooldown > 0) {
+          const timer = setInterval(() => {
+            setCooldown((prev) => prev - 1);
+          }, 1000);
+          return () => clearInterval(timer);
+        }
+      }, [cooldown]);
 
     const handleScratchComplete = (cardId: number) => {
+        if (cooldown > 0) {
+            toast({
+                variant: 'destructive',
+                title: 'Please wait',
+                description: `You can scratch another card in ${cooldown} seconds.`,
+            });
+            return;
+        }
+
         const card = cards.find(c => c.id === cardId);
         if (card && !card.isScratched) {
             addCoins(card.reward);
             setCards(prevCards => prevCards.map(c => c.id === cardId ? { ...c, isScratched: true } : c));
+            
+            localStorage.setItem('scratchCardLastScratch', Date.now().toString());
+            setCooldown(COOLDOWN_SECONDS);
+
             toast({
                 title: "Congratulations!",
                 description: `You won ${card.reward} coins!`,
@@ -76,6 +108,11 @@ export default function ScratchCardPage() {
                     ))}
                 </CardContent>
             </Card>
+            {cooldown > 0 && (
+                <div className="fixed bottom-4 right-4 bg-primary text-primary-foreground p-3 rounded-lg shadow-lg">
+                    Next scratch in: {cooldown}s
+                </div>
+            )}
         </AppLayout>
     );
 }
