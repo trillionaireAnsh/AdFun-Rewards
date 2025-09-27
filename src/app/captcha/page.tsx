@@ -41,6 +41,7 @@ const generateCaptcha = () => {
 };
 
 const COOLDOWN_SECONDS = 30;
+const MAX_CAPTCHAS_PER_DAY = 5;
 
 export default function CaptchaPage() {
   const { toast } = useToast();
@@ -48,9 +49,29 @@ export default function CaptchaPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [captchaText, setCaptchaText] = useState("");
   const [cooldown, setCooldown] = useState(0);
+  const [captchasLeft, setCaptchasLeft] = useState(MAX_CAPTCHAS_PER_DAY);
 
   useEffect(() => {
     setCaptchaText(generateCaptcha());
+
+    const today = new Date().toISOString().split('T')[0];
+    const storedState = localStorage.getItem('captchaState');
+
+    if (storedState) {
+        const { date, count } = JSON.parse(storedState);
+        if (date === today) {
+            setCaptchasLeft(count);
+        } else {
+            // New day, reset
+            setCaptchasLeft(MAX_CAPTCHAS_PER_DAY);
+            localStorage.setItem('captchaState', JSON.stringify({ date: today, count: MAX_CAPTCHAS_PER_DAY }));
+        }
+    } else {
+        // No state stored, initialize for today
+        localStorage.setItem('captchaState', JSON.stringify({ date: today, count: MAX_CAPTCHAS_PER_DAY }));
+    }
+
+
     const lastAttemptTime = localStorage.getItem('captchaLastAttempt');
     if (lastAttemptTime) {
       const timePassed = (Date.now() - parseInt(lastAttemptTime, 10)) / 1000;
@@ -88,6 +109,12 @@ export default function CaptchaPage() {
       title: "Success!",
       description: `You've earned ${reward} coins.`,
     });
+    
+    const newCaptchasLeft = captchasLeft - 1;
+    setCaptchasLeft(newCaptchasLeft);
+    const today = new Date().toISOString().split('T')[0];
+    localStorage.setItem('captchaState', JSON.stringify({ date: today, count: newCaptchasLeft }));
+
     handleRefresh();
     setIsLoading(false);
     localStorage.setItem('captchaLastAttempt', Date.now().toString());
@@ -111,6 +138,8 @@ export default function CaptchaPage() {
     // Simulate a short delay for feedback
     setTimeout(handleSuccess, 500);
   }
+  
+  const noAttemptsLeft = captchasLeft <= 0;
 
   return (
     <AppLayout title="Solve Captcha">
@@ -118,7 +147,10 @@ export default function CaptchaPage() {
         <CardHeader>
           <CardTitle>Solve the Captcha</CardTitle>
           <CardDescription>
-            Enter the text from the image below to earn coins.
+            {noAttemptsLeft 
+              ? "You have used all your attempts for today." 
+              : `Enter the text from the image below to earn coins. You have ${captchasLeft} attempts left.`
+            }
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -126,7 +158,7 @@ export default function CaptchaPage() {
             <div className="bg-muted px-6 py-3 rounded-md select-none tracking-[.5em] font-mono text-2xl font-bold line-through">
                 {captchaText}
             </div>
-            <Button variant="ghost" size="icon" onClick={handleRefresh} disabled={cooldown > 0}>
+            <Button variant="ghost" size="icon" onClick={handleRefresh} disabled={cooldown > 0 || noAttemptsLeft}>
                 <RefreshCw className="h-5 w-5"/>
                 <span className="sr-only">Refresh Captcha</span>
             </Button>
@@ -143,18 +175,20 @@ export default function CaptchaPage() {
                       <Input
                         placeholder="Enter the text above"
                         {...field}
-                        disabled={cooldown > 0 || isLoading}
+                        disabled={cooldown > 0 || isLoading || noAttemptsLeft}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isLoading || cooldown > 0} size="lg" className="w-full">
+              <Button type="submit" disabled={isLoading || cooldown > 0 || noAttemptsLeft} size="lg" className="w-full">
                 {isLoading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : cooldown > 0 ? (
                   `Wait ${cooldown}s`
+                ) : noAttemptsLeft ? (
+                    "No Attempts Left"
                 ) : (
                   "Submit and Earn"
                 )}
